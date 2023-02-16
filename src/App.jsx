@@ -1,13 +1,19 @@
-import { useState } from 'react'
+import { Header } from "./components";
+import { Home, Doctor, Patient } from "./pages";
+import { constants } from "./constants";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <h1 className="text-3xl underline">
-      Hello world!
-    </h1>
-  )
+    <div>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/doctor" element={<Doctor />} />
+        <Route path="/patient" element={<Patient />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;

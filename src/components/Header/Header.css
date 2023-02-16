@@ -1,0 +1,34 @@
+.navbar-bg {
+    background:#34436A;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
+    height: 70px;
+}
+
+.navbar-brand-style {
+    margin-left: 1%;
+    color: white;
+    cursor: pointer;
+}
+.navbar-brand-style:hover {
+    color: white;
+}
+
+.nav-link-style {
+    padding: 10px;
+}
+
+.nav-img-style {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-style {
+    margin-right: 1%;
+    display: flex;
+}
+
+.nav-collapse-style {
+    justify-content: end;
+}
