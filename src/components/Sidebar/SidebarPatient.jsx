@@ -2,9 +2,9 @@ import React from 'react'
 import {SidebarItem} from '../index';
 import { constants } from '../../constants';
 
-function SidebarPatient() {
+function SidebarPatient(props) {
     return (
-        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full'>
+        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full' onClick={props.onClickFunction}>
           <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_LENS_IMG} alt={constants.REACT_APP_SIDEBAR_LENS_IMG} sidebarText={constants.REACT_APP_SIDEBAR_PENDING_CONSENT_REQUEST} />
           <div className='sidebar-divider' />
 
