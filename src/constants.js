@@ -8,6 +8,13 @@ export const constants  = {
     REACT_APP_SIDEBAR_SHARED_CONSENTS : "Shared Consents",
     REACT_APP_SIDEBAR_RECENT_CONSENTS : "Recent Consents",
     REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT : "Emergency Consent",
+
+    REACT_APP_SIDEBAR_PENDING_CONSENT_REQUEST:"Pending Consent Request",
+    REACT_APP_SIDEBAR_PATIENT_ONGOING_CONSENT:"Patient Ongoing Consent",
+    REACT_APP_SIDEBAR_PAST_CONSENT_REQUEST:"Past Consent Request",
+    REACT_APP_SIDEBAR_GET_MY_RECORDS:"Get My Records",
+
+
     REACT_APP_REGISTRATION_HEADING : "Registration",
     REACT_APP_NAME_LABEL : "Name",
     REACT_APP_EMAIL_LABEL : "Email",
