@@ -2,65 +2,136 @@ import React from 'react'
 import { SidebarPatient } from "../components";
 
 import { useState } from "react";
+import { Accordion } from 'react-bootstrap';
 
-// function PendingConsentRequest() {
-//   const [isOpen, setIsOpen] = useState(false);
+function Patient(props) {
 
-//   function toggleCollapsible() {
-//     setIsOpen(!isOpen);
-//   }
+  // const [selectedDivision, setSelectedDivision] = useState(null);
+  const [dataFromChild, setDataFromChild] = useState(null);
 
-//   return (
-//     <div>
-//       <button
-//         className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-//         onClick={toggleCollapsible}
-//       >
-//         Click Me
-//       </button>
-//       <div
-//         className={`bg-gray-100 p-4 ${isOpen ? "" : "hidden"}`}
-//       >
-//         <p className="text-gray-800">
-//           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//           Suspendisse varius enim in eros elementum tristique. Duis cursus,
-//           mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam
-//           libero vitae erat.
-//         </p>
-//       </div>
-//     </div>
-//   );
+  function PendingConsentRequest(props) {
+    const [isOpen, setIsOpen] = useState(false);
+    function toggleCollapsible() {
+      setIsOpen(!isOpen);
+    }
+    return (
+    
+      <div>
+        <div>
+        <div class="flex absolute w-630 h-54 left-303 top-15">
+  <p class="font-poppins font-normal font-regular text-3xl leading-26 tracking-tighter text-black">Pending Consent Request</p>
+</div>
+        
+</div>
+ <Accordion>
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>Consent request #1</Accordion.Header>
+        <Accordion.Body>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </Accordion.Body>
+      </Accordion.Item>
+      <Accordion.Item eventKey="1">
+        <Accordion.Header>Consent request #2</Accordion.Header>
+        <Accordion.Body>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+      
+      </div>
+    );
+  
+    }
 
 
 
-// function PendingConsentRequest() {
 
+    function OngoingConsentRequest(props) {
 
-//   return (
-//     <div>
-//       <h1>Clickable Division Example</h1>
-//       <FunctionComponent onClickFunction={handleClick} />
-//     </div>
-//   );
-// }
+      return (
+        <div>
+          
+          Ongoing Consent Request
 
-// export default PendingConsentRequest;
+        </div>
+      );
+      }
 
+      function PastConsentRequest(props) {
 
+        return (
+          <div>
+ Past Consent Request
+          </div>
+        );
+      
+        }
 
+        function GetMyRecord(props) {
+ 
+          return (
+<div class="flex absolute w-630 h-54 left-303 top-13">
+  <p class="font-poppins font-normal font-regular text-3xl leading-26 tracking-tighter text-black">Lorem ipsum dolor sit amet</p>
+</div>
+          );
+          }
 
-function Patient() {
+    function handleClick(e) {
+      // e.preventDefault();
+      console.log(e);
+      console.log("Back from parent",dataFromChild)
+    
+    }
 
-  function PendingConsentRequest() {
-    console.log('You clicked the division!');
-    // add any function logic here
-  }
+    
+
+    const handleDataFromChild = (data) => {
+      setDataFromChild(data);
+      console.log("Back from parent",dataFromChild)
+    }
+  
+      const project = () => {
+        switch(dataFromChild) {
+  
+          case "div1":   return <PendingConsentRequest/>;
+          break;
+          case "div2":   return <OngoingConsentRequest />;
+          break;
+          case "div3": return <PastConsentRequest />;
+          break;
+          case "div4":  return <GetMyRecord />;
+          break;
+  
+          default:      return <h1>No project match</h1>
+        }
+      }
+    
+
   return (
     <div className="flex items-center justify-start">
-      <SidebarPatient/>
-      <div className="w-[85%] h-[100vh]">hi</div>
+      <SidebarPatient onData={handleDataFromChild} />
+      {/* {dataFromChild== "div1" && <endingConsentRequest/>}
+      {dataFromChild=="div2" && <ongoingConsentRequest/>}      
+      {dataFromChild=="div3" && <pastConsentRequest/>}
+      {dataFromChild=="div4" && <getMyRecord/>} */}
+      <div>{ project() }</div>
     </div>
+    
+
   );
 }
 
-export default Patient;
+
+export default  Patient ;
