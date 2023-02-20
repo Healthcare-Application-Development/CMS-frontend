@@ -1,0 +1,15 @@
+.modal-body-style {
+    text-align: center;
+}
+.modal-header-style {
+    font-size: 25px;
+    margin-top: 3%;
+}
+.modal-success-img {
+    width: 156px;
+    height: 156px;
+    margin-bottom: 6%;
+}
+.modal-close-btn {
+    margin-bottom: 3%;
+}
