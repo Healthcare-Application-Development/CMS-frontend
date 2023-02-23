@@ -1,5 +1,5 @@
-import React from 'react'
-import { SidebarPatient } from "../components";
+import React, { useEffect } from 'react'
+import { AccordionItem, SidebarPatient } from "../components";
 
 import { useState } from "react";
 import { Accordion } from 'react-bootstrap';
@@ -8,48 +8,50 @@ function Patient(props) {
 
   // const [selectedDivision, setSelectedDivision] = useState(null);
   const [dataFromChild, setDataFromChild] = useState(null);
-
+  
+  const [consentRequests, setConsentRequests] = useState([
+    {
+      consentHeading: "MRI"
+  }
+  ]);
+  const getConsentRequests = () => {
+    fetch("http://localhost:9100/patient/getAllConsents?id=1", {
+      headers: {
+        "Content-Type" : "application/json"
+      }
+    }).then((data) => data.json())
+    .then((response) => {
+      setConsentRequests(response);
+    }) 
+  }
+  useEffect(() => {
+    getConsentRequests();
+  },[])
   function PendingConsentRequest(props) {
     const [isOpen, setIsOpen] = useState(false);
+
     function toggleCollapsible() {
       setIsOpen(!isOpen);
     }
+
+    var consentRequestsItems = consentRequests.map((element, index) => {
+      return <AccordionItem consentHeading={element.consentMessage} consentID={element.id} patientID={element.patientID} eventKey={index} consentAcknowledged={element.consentAcknowledged} setConsentRequests={setConsentRequests} doctorID={element.doctorID} hospitalID={element.hospitalId}/>
+    })
+    
     return (
     
       <div>
+          <div className='cursor-pointer text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg' onClick={() => getConsentRequests()}>Refresh</div>
+          <div class="flex w-630 h-54">
+              <p class="font-poppins font-normal font-regular text-3xl leading-26 tracking-tighter text-black">Pending Consent Request</p>
+          </div>
         <div>
-        <div class="flex absolute w-630 h-54 left-303 top-15">
-  <p class="font-poppins font-normal font-regular text-3xl leading-26 tracking-tighter text-black">Pending Consent Request</p>
-</div>
-        
-</div>
- <Accordion>
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>Consent request #1</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="1">
-        <Accordion.Header>Consent request #2</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
-      
+        <Accordion>
+          {
+            consentRequestsItems
+          }
+        </Accordion>
+        </div>
       </div>
     );
   
@@ -120,13 +122,13 @@ function Patient(props) {
     
 
   return (
-    <div className="flex items-center justify-start">
+    <div className="flex justify-start ">
       <SidebarPatient onData={handleDataFromChild} />
       {/* {dataFromChild== "div1" && <endingConsentRequest/>}
       {dataFromChild=="div2" && <ongoingConsentRequest/>}      
       {dataFromChild=="div3" && <pastConsentRequest/>}
       {dataFromChild=="div4" && <getMyRecord/>} */}
-      <div>{ project() }</div>
+      <div className='ml-[27%] mt-[10%]'>{ project() }</div>
     </div>
     
 
