@@ -36,5 +36,16 @@ export const constants  = {
     REACT_APP_SIDEBAR_VIEW_DATA_IMG : "view_data",
     REACT_APP_SIDEBAR_WARNING_IMG : "warning",
     REACT_APP_SIDEBAR_RECENT_CONSENTS_IMG : "recent_consents",
-    REACT_APP_SUCCESS_IMG : "success"
+    REACT_APP_SUCCESS_IMG : "success",
+
+    REACT_APP_CREATE_HOSPITAL_HEADING_LABEL : "Add Hospital Instance",
+REACT_APP_CURRENT_HOSPITAL_LABEL : "Current Hospitals",
+REACT_APP_HOSPITAL_DROPDOWN_LABEL : "Hospitals (By ID)",
+REACT_APP_HOSPITAL_NAME_LABEL : "Hospital Name",
+REACT_APP_ADMIN_NAME_LABEL : "Administrator Name",
+REACT_APP_ADMIN_EMAIL_LABEL : "Administrator Email",
+REACT_APP_ADMIN_PHONE_LABEL : "Administrator Phone",
+REACT_APP_CREATE_HOSPITAL_LABEL : "Add Hospital"
+
+
 }
