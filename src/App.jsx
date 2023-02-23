@@ -1,5 +1,5 @@
 import { Header, Sidebar } from "./components";
-import { Home, Doctor, Patient } from "./pages";
+import { Home, Doctor, Patient, CreateHospital } from "./pages";
 import { constants } from "./constants";
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -11,6 +11,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/doctor" element={<Doctor />} />
         <Route path="/patient" element={<Patient />} />
+        <Route path="/super_admin" element={<CreateHospital />} />
       </Routes>
     </div>
   );
