@@ -57,7 +57,7 @@ const handleClick = (e) => {
 
 
           <div className='sidebar-emergency-style'>
-            <button className='sidebar-emergency-button'>
+            <button className='sidebar-emergency-button bg-red-800 flex p-4 m-2 gap-3 items-center justify-center'>
                 <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} className='sidebar-emergency-image' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} />
                 <span className='sidebar-emergency-text'>{constants.REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT}</span>
             </button>
