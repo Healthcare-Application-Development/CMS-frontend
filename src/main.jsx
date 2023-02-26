@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
-      <div className="h-[100vh] w-[100vw]">
+      <div className="h-[100vh]">
         <App />
       </div>
     </Router>
