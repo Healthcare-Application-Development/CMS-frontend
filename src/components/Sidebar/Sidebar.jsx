@@ -4,7 +4,7 @@ import { constants } from '../../constants';
 
 function Sidebar() {
     return (
-        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full'>
+        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full fixed w-[16%] top-[70px]'>
           <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_LENS_IMG} alt={constants.REACT_APP_SIDEBAR_LENS_IMG} sidebarText={constants.REACT_APP_SIDEBAR_SEARCH_PATIENT_DATA} />
           <div className='sidebar-divider' />
 

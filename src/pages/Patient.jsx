@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react'
-import { AccordionItem, SidebarPatient } from "../components";
+import { AccordionItem, Header, SidebarPatient } from "../components";
 
 import { useState } from "react";
 import { Accordion } from 'react-bootstrap';
 
 function Patient(props) {
-
-  // const [selectedDivision, setSelectedDivision] = useState(null);
   const [dataFromChild, setDataFromChild] = useState(null);
   
-  const [consentRequests, setConsentRequests] = useState([
-    {
-      consentHeading: "MRI"
-  }
-  ]);
+  const [consentRequests, setConsentRequests] = useState([]);
   const getConsentRequests = () => {
     fetch("http://localhost:9100/patient/getAllConsents?id=1", {
       headers: {
@@ -21,7 +15,12 @@ function Patient(props) {
       }
     }).then((data) => data.json())
     .then((response) => {
-      setConsentRequests(response);
+      if (response !== null)
+        setConsentRequests(response);
+      else 
+        setConsentRequests([]);
+    }).catch((err) => {
+      setConsentRequests([]);
     }) 
   }
   useEffect(() => {
@@ -34,8 +33,8 @@ function Patient(props) {
       setIsOpen(!isOpen);
     }
 
-    var consentRequestsItems = consentRequests.map((element, index) => {
-      return <AccordionItem consentHeading={element.consentMessage} consentID={element.id} patientID={element.patientID} eventKey={index} consentAcknowledged={element.consentAcknowledged} setConsentRequests={setConsentRequests} doctorID={element.doctorID} hospitalID={element.hospitalId}/>
+    var consentRequestsItems = consentRequests && consentRequests.length > 0 && consentRequests.map((element, index) => {
+      return <AccordionItem consentHeading={element.consentMessage} consentID={element.id} patientID={element.patientID} eventKey={index} consentAcknowledged={element.consentAcknowledged} setConsentRequests={setConsentRequests} doctorID={element.doctorID} hospitalID={element.hospitalId} fromDate={element.fromDate} toDate={element.toDate}/>
     })
     
     return (
@@ -122,14 +121,17 @@ function Patient(props) {
     
 
   return (
-    <div className="flex justify-start ">
-      <SidebarPatient onData={handleDataFromChild} />
-      {/* {dataFromChild== "div1" && <endingConsentRequest/>}
-      {dataFromChild=="div2" && <ongoingConsentRequest/>}      
-      {dataFromChild=="div3" && <pastConsentRequest/>}
-      {dataFromChild=="div4" && <getMyRecord/>} */}
-      <div className='ml-[27%] mt-[10%]'>{ project() }</div>
-    </div>
+    <>
+      <Header />
+      <div className="flex justify-start ">
+        <SidebarPatient onData={handleDataFromChild}/>
+        {/* {dataFromChild== "div1" && <endingConsentRequest/>}
+        {dataFromChild=="div2" && <ongoingConsentRequest/>}      
+        {dataFromChild=="div3" && <pastConsentRequest/>}
+        {dataFromChild=="div4" && <getMyRecord/>} */}
+        <div className='ml-[45%] mt-[10%]'>{ project() }</div>
+      </div>
+    </>
     
 
   );

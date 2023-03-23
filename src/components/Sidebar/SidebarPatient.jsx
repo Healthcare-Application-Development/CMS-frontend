@@ -23,7 +23,7 @@ const handleClick = (e) => {
   
   // }
     return (
-        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full'>
+        <div className='sidebar bg-black text-white max-w-full h-[100vh] max-h-full fixed top-[70px]'>
           <button onClick={() => handleClick("div1")} >
           {/* <button onClick={() => setSelectedDivision("div1")} > */}
             <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_LENS_IMG} alt={constants.REACT_APP_SIDEBAR_LENS_IMG} sidebarText={constants.REACT_APP_SIDEBAR_PENDING_CONSENT_REQUEST}  />
@@ -52,16 +52,6 @@ const handleClick = (e) => {
           </button>
           
           <div className='sidebar-divider' />
-          
-       
-
-
-          <div className='sidebar-emergency-style'>
-            <button className='sidebar-emergency-button'>
-                <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} className='sidebar-emergency-image' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} />
-                <span className='sidebar-emergency-text'>{constants.REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT}</span>
-            </button>
-          </div>
         </div> 
     )
 }

@@ -5,7 +5,8 @@ import { constants } from '../../constants';
 
 function Header() {
     return (
-        <Navbar expand="lg" className='navbar-bg' >
+      <div className='fixed w-[100%] z-1'>
+        <Navbar expand="lg" className='navbar-bg'>
           <Navbar.Brand className='navbar-brand-style text-white'>{constants.REACT_APP_NAV_BRAND}</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav" className='nav-collapse-style'>
@@ -19,6 +20,7 @@ function Header() {
             </Nav>
           </Navbar.Collapse>
       </Navbar>
+      </div>
     );
 }
 
