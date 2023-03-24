@@ -1,7 +1,9 @@
 import React from 'react';
 import { Accordion } from 'react-bootstrap';
 
-function AccordionItem({consentHeading, eventKey, consentID, patientID, setConsentRequests, consentAcknowledged, hospitalID, doctorID}) {
+function AccordionItem({consentHeading, eventKey, consentID, patientID, setConsentRequests, consentAcknowledged, hospitalID, doctorID, fromDate, toDate}) {
+    fromDate = new Date(fromDate).toDateString();
+    toDate = new Date(toDate).toDateString();
     const updateStatusOfConsent = (approved) => {
         const requestBody = {
             "consentAcknowledged" : true,
@@ -26,6 +28,8 @@ function AccordionItem({consentHeading, eventKey, consentID, patientID, setConse
                 <Accordion.Body>
                     <p>Hospital ID : {hospitalID}</p>
                     <p>Doctor ID : {doctorID}</p>
+                    <p>From Date : {fromDate}</p>
+                    <p>To Date : {toDate}</p>
                 {
                     !consentAcknowledged && <div>
                         <div className='flex flex-row justify-between'>

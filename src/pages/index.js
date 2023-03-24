@@ -1,4 +1,4 @@
-export {default as Home} from './Home';
+export {default as Home} from './Home/Home';
 export {default as Doctor} from './Doctor/Doctor';
 
 // Super Admin
