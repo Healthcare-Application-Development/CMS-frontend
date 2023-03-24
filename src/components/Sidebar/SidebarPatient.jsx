@@ -11,7 +11,7 @@ function SidebarPatient() {
   };
 
   return (
-    <div className="sidebar bg-black text-white max-w-full h-[100vh] max-h-full fixed top-[70px]">
+    <div className="sidebar bg-black text-white w-[22%] h-[100vh] max-h-full">
       <button onClick={() => handleClick("/patient/PatientPendingCR")}>
         <SidebarItem
           imgName={constants.REACT_APP_SIDEBAR_LENS_IMG}

@@ -6,7 +6,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 function App() {
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="flex flex-col w-[100%] h-[100%]">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

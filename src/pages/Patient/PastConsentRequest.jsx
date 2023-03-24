@@ -3,11 +3,9 @@ import { AccordionItem, SidebarPatient } from "../../components";
 
 function PastConsentRequest() {
   return (
-    <div>
-      <div className="flex justify-start ">
-        <SidebarPatient />
-      </div>
-      <div>PastConsentRequest</div>
+    <div className="flex w-full">
+      <SidebarPatient />
+      <div className="w-[78%]">PastConsentRequest</div>
     </div>
   );
 }

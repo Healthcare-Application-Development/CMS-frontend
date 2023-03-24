@@ -102,7 +102,6 @@ function RequestConsent() {
   }, [])
   return (
     <>
-    <Header />
     <div className="w-[85%] h-[95%] flex flex-col">
       <SearchBar />
       <div className="w-full shadow-lg p-6 ml-[30%] mt-[5%]">

@@ -15,7 +15,6 @@ function Home() {
   }
   return (
     <div>
-      <Header />
       <div className='mt-[8%] ml-[35%] mr-[35%]'>
             <Form>
                 <Form.Group className='ml-[42%]'>
