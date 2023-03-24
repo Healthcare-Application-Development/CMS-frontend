@@ -4,7 +4,6 @@ import { constants } from "../../constants";
 import { useNavigate } from "react-router-dom";
 
 function SidebarPatient() {
-  
   const navigate = useNavigate();
 
   const handleClick = (e) => {
@@ -53,18 +52,13 @@ function SidebarPatient() {
 
       <div className="sidebar-divider" />
 
-      <div className="sidebar-emergency-style">
-        <button className="sidebar-emergency-button">
-          <img
-            src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`}
-            className="sidebar-emergency-image"
-            alt={constants.REACT_APP_SIDEBAR_WARNING_IMG}
-          />
-          <span className="sidebar-emergency-text">
-            {constants.REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT}
-          </span>
-        </button>
-      </div>
+      <button className="sidebar-emergency-button">
+        <SidebarItem
+          imgName={constants.REACT_APP_SIDEBAR_WARNING_IMG}
+          alt="Emrgncy"
+          sidebarText="Emergency Consent"
+        />
+      </button>
     </div>
   );
 }
