@@ -5,32 +5,22 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
 import { Table } from "react-bootstrap";
 
+import { constants } from "../../constants";
+
 function RequestConsent() {
+
+  const AbhaID = 1;
+
   const [selectedRecord, setSelectedRecord] = useState("");
   const [selectedHospital, setSelectedHospital] = useState("");
 
   const [doctorConsentList, setDoctorConsentList] = useState([]);
   const [hospitalSelectedError, setHospitalSelectedError] = useState(false);
   const [recordSelectedError, setRecordSelectedError] = useState(false);
+  
   const [startDateError, setStartDateError] = useState(false);
   const [endDateError, setEndDateError] = useState(false);
-  const hospitalList = {
-    0: "Select Hospital",
-    1: "vivek",
-    2: "Vitals",
-    3: "Health",
-    4: "Medicine",
-    5: "Pharmacy",
-  };
 
-  const recordTypes = {
-    0: "Select Record Type",
-    1: "Blood Report",
-    2: "X-ray",
-    3: "MRI Scanning",
-    4: "General Observations",
-    5: "Medicines",
-  };
   const [dateSelection, setDateSelection] = useState([
     {
       startDate: new Date(),
@@ -38,6 +28,7 @@ function RequestConsent() {
       key: 'selection'
     }
   ]);
+
   const getAllConsents = () => {
     fetch("http://localhost:9100/doctor/getAllConsents?id=1")
     .then(data => data.json())
@@ -45,6 +36,7 @@ function RequestConsent() {
         setDoctorConsentList(response);
     })
   }
+
   const sendRequest = () => {
       if (selectedHospital == 0) {
         setHospitalSelectedError(true);
@@ -70,7 +62,7 @@ function RequestConsent() {
       } else {
         setEndDateError(false)
       }
-      const consentMessage = recordTypes[selectedRecord]
+      const consentMessage = constants.recordTypes[selectedRecord]
       const fromDate = new Date(dateSelection[0].startDate);
       const toDate = new Date(dateSelection[0].endDate);
       const consentRequest = {
@@ -114,9 +106,9 @@ function RequestConsent() {
         </div>
         <div className="flex bg-slate-300 h-[512px] justify-around p-11 rounded-sm border-x-slate-900">
           <div className="flex flex-col">
-            <Dropdown Label="Choose Hospital" options={hospitalList} onClick={(opt) => setSelectedHospital(opt)}/>
+            <Dropdown Label="Choose Hospital" options={constants.hospitalList} onClick={(opt) => setSelectedHospital(opt)}/>
             {hospitalSelectedError && <p>Hospital Not Selected</p>}
-            <Dropdown Label="Health Record Category" options={recordTypes} onClick={(opt) => setSelectedRecord(opt)}/>
+            <Dropdown Label="Health Record Category" options={constants.recordTypes} onClick={(opt) => setSelectedRecord(opt)}/>
             {recordSelectedError && <p>Record Not Selected</p>}
           </div>
           <div>

@@ -11,9 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/doctor" element={<Doctor />} />
-        <Route path="/patient" element={<Patient />} />
         <Route path="/super_admin" element={<CreateHospital />} />
 
+        <Route path="/patient" element={<Patient />} />
         <Route path="/patient/getMyRecord" element={<GetPatientRecord/>} />
         <Route path="/patient/PatientOngoingCR" element={<PatientOngoingCR/>} />
         <Route path="/patient/PatientPastCR" element={<PatientPastCR/>} />
