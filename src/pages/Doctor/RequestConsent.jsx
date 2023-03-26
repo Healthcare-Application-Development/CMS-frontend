@@ -114,8 +114,8 @@ function RequestConsent() {
         </div>
         <div className="flex bg-slate-300 h-[512px] justify-around p-11 rounded-sm border-x-slate-900">
           <div className="flex flex-col">
-            <Dropdown Label="Choose Hospital" options={hospitalList} onClick={(opt) => setSelectedHospital(opt)}/>
-            {hospitalSelectedError && <p>Hospital Not Selected</p>}
+            {/* <Dropdown Label="Choose Hospital" options={hospitalList} onClick={(opt) => setSelectedHospital(opt)}/>
+            {hospitalSelectedError && <p>Hospital Not Selected</p>} */}
             <Dropdown Label="Health Record Category" options={recordTypes} onClick={(opt) => setSelectedRecord(opt)}/>
             {recordSelectedError && <p>Record Not Selected</p>}
           </div>
