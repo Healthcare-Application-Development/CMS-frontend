@@ -7,21 +7,11 @@ import { Table } from "react-bootstrap";
 
 function RequestConsent() {
   const [selectedRecord, setSelectedRecord] = useState("");
-  const [selectedHospital, setSelectedHospital] = useState("");
 
   const [doctorConsentList, setDoctorConsentList] = useState([]);
-  const [hospitalSelectedError, setHospitalSelectedError] = useState(false);
   const [recordSelectedError, setRecordSelectedError] = useState(false);
   const [startDateError, setStartDateError] = useState(false);
   const [endDateError, setEndDateError] = useState(false);
-  const hospitalList = {
-    0: "Select Hospital",
-    1: "vivek",
-    2: "Vitals",
-    3: "Health",
-    4: "Medicine",
-    5: "Pharmacy",
-  };
 
   const recordTypes = {
     0: "Select Record Type",
@@ -39,19 +29,14 @@ function RequestConsent() {
     }
   ]);
   const getAllConsents = () => {
+    console.log("ABC")
     fetch("http://localhost:9100/doctor/getAllConsents?id=1")
     .then(data => data.json())
     .then((response) => {
-        setDoctorConsentList(response);
+        setDoctorConsentList(response.object);
     })
   }
   const sendRequest = () => {
-      if (selectedHospital == 0) {
-        setHospitalSelectedError(true);
-        return;
-      } else {
-        setHospitalSelectedError(false)
-      }
       if (selectedRecord == 0) {
         setRecordSelectedError(true);
         return;
@@ -77,7 +62,6 @@ function RequestConsent() {
         requestBody : consentMessage,
         doctorId: 1,
         patientId: 1,
-        hospitalId: parseInt(selectedHospital),
         fromDate: fromDate.getFullYear() + '-' + (fromDate.getMonth() + 1) + '-' + fromDate.getDate(),
         toDate: toDate.getFullYear() + '-' + (toDate.getMonth() + 1)+ '-' + toDate.getDate(),
       }
@@ -90,7 +74,7 @@ function RequestConsent() {
       }).then(data => data.json())
       .then((response) => {
         if (response !== null)
-          setDoctorConsentList(response);
+          setDoctorConsentList(response.object);
         else 
           setDoctorConsentList([]);
       }).catch((e) => {
