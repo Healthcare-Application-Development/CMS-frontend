@@ -18,7 +18,7 @@ function AccordionItem({consentHeading, eventKey, consentID, patientID, setConse
             body: JSON.stringify(requestBody)
         }).then(data => data.json())
         .then((response) => {
-            setConsentRequests(response);
+            setConsentRequests(response.object);
         })
     }
     return (
