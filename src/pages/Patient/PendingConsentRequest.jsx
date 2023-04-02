@@ -5,23 +5,24 @@ import { useState, useEffect } from "react";
 
 function PendingConsentRequest() {
 
-  const [consentRequests, setConsentRequests] = useState([
-    { consentHeading: "MRI" },
+  const [consentArtifacts, setConsentArtifacts] = useState([
+    { consentHeading: "No requests" },
   ]);
 
-  const getConsentRequests = () => {
-    fetch("http://localhost:9100/patient/getAllConsents?id=1", {
+  const getConsentArtifacts = () => {
+    fetch("http://localhost:9100/patient/getAllConsents/2", {
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((data) => data.json())
       .then((response) => {
-        setConsentRequests(response);
+        console.log(response);
+        setConsentArtifacts(response);
       });
   };
   useEffect(() => {
-    getConsentRequests();
+    getConsentArtifacts();
   }, [])
   return (
     <>
@@ -30,7 +31,7 @@ function PendingConsentRequest() {
       </div>
       <div
         className="cursor-pointer text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg ml-[38%] mt-[6%] mr-[38%]"
-        onClick={() => getConsentRequests()}
+        onClick={() => getConsentArtifacts()}
       >
         Refresh
       </div>
@@ -41,19 +42,15 @@ function PendingConsentRequest() {
       </div>
       <div className="mx-[38%]">
         <Accordion>
-          {consentRequests.map((element, index) => {
+          {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].map((element, index) => {
             return <AccordionItem
               key={index}
-              consentHeading={element.consentMessage}
-              consentID={element.id}
-              patientID={element.patientID}
-              eventKey={index}
-              consentAcknowledged={element.consentAcknowledged}
-              setConsentRequests={setConsentRequests}
+              artifactId={element.artifactId}
+              consentItems={element.consentItems}
+              setConsentArtifacts={setConsentArtifacts}
               doctorID={element.doctorID}
-              hospitalID={element.hospitalId}
-              fromDate={new Date(element.fromDate).toDateString()}
-              toDate={new Date(element.toDate).toDateString()}
+              emergency={element.emergency}
+              timestamp={element.timestamp} 
             />;
           })}
         </Accordion>
@@ -63,3 +60,4 @@ function PendingConsentRequest() {
 }
 
 export default PendingConsentRequest;
+
