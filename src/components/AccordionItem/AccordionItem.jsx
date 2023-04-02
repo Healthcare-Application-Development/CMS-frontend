@@ -28,7 +28,7 @@ function AccordionItem({
       <div>
         <h2>Artifact ID: {artifactId}</h2>
         <p>Doctor ID: {doctorID}</p>
-        <p>Time of request: {timestamp}</p>
+        <p>Time of request: {new Date(timestamp).toDateString()}</p>
         <p>Emergency: {emergency ? "Yes" : "No"}</p>
         <h3>Consent Items:</h3>
         <ul>
