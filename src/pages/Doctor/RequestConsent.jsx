@@ -9,7 +9,7 @@ function RequestConsent() {
   const [consentRequest, setConsentRequest] = useState({
     doctorID: 1,
     patientID: 2,
-    timestamp: Date.now(),
+    timestamp: new Date(Date.now()).toISOString(),
     emergency: false,
     consentItems: [],
   });
@@ -62,15 +62,15 @@ function RequestConsent() {
       fromDate:
         fromDate.getFullYear() +
         "-" +
-        (fromDate.getMonth() + 1) +
+        ((fromDate.getMonth() + 1) <= 10 ? "0" + (fromDate.getMonth() + 1) : (fromDate.getMonth() + 1)) +
         "-" +
-        fromDate.getDate(),
+        (fromDate.getDate() <= 10 ? "0" + fromDate.getDate() : fromDate.getDate()),
       toDate:
         toDate.getFullYear() +
         "-" +
-        (toDate.getMonth() + 1) +
+        ((toDate.getMonth() + 1) <= 10 ? "0" + (toDate.getMonth() + 1) : (toDate.getMonth() + 1))+
         "-" +
-        toDate.getDate(),
+        (toDate.getDate() < 10 ? "0" + toDate.getDate() : toDate.getDate()),
       consentArtifcat: null,
       hospitalId: 1,
     };
