@@ -17,8 +17,7 @@ function PendingConsentRequest() {
     })
       .then((data) => data.json())
       .then((response) => {
-        console.log(response);
-        setConsentArtifacts(response);
+        setConsentRequests(response.object);
       });
   };
   useEffect(() => {
