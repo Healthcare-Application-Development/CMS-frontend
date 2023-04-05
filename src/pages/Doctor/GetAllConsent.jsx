@@ -13,7 +13,7 @@ function getAllConsent() {
   const getAllConsents = () => {
     fetch("http://localhost:9100/doctor/getAllConsents?id=" + UPRNID, {
       headers: {
-        'Authorization' : 'Basic ' + localStorage.getItem("token")
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       }
     })
       .then((data) => data.json())

@@ -15,18 +15,17 @@ function Home() {
       password,
       role: selectedOption
     }
-    fetch("http://localhost:9100/auth/login", {
+    fetch("http://localhost:9100/authenticate", {
       method: 'POST',
       headers: {
-        'Content-Type' : 'application/json',
-        'Authorization' : 'Basic ' + window.btoa(username + ":" + password)
+        'Content-Type' : 'application/json'
       },
       body : JSON.stringify(obj)
     }).then(response => response.json())
     .then((data) => {
       if (data.status === 200) {
         setFailedLogin(false);
-        localStorage.setItem("token", window.btoa(username + ":" + password));
+        localStorage.setItem("token", data.object.accessToken);
         localStorage.setItem("user", JSON.stringify(data.object))
         if (selectedOption === 'doctor') {
           navigate('/doctor/requestConsent')

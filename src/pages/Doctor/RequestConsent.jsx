@@ -110,7 +110,7 @@ function RequestConsent() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : 'Basic ' + localStorage.getItem("token")
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
     })
         .then((data) => data.text())

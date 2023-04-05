@@ -19,7 +19,7 @@ function AccordionItem({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'Authorization' : 'Basic ' + localStorage.getItem("token")
+          'Authorization' : 'Bearer ' + localStorage.getItem("token")
         },
         body: JSON.stringify({
           itemId: items[i].id,
@@ -37,7 +37,7 @@ function AccordionItem({
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : 'Basic ' + localStorage.getItem("token")
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
       body: JSON.stringify(requestBody),
     })

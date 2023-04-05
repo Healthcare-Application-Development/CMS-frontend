@@ -16,7 +16,7 @@ function PastConsentRequest() {
     fetch("http://localhost:9100/patient/getAllConsents/" + ABHAID, {
       headers: {
         "Content-Type": "application/json",
-        'Authorization' : 'Basic ' + localStorage.getItem("token")
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
     })
       .then((data) => data.json())
