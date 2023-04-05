@@ -4,20 +4,25 @@ import { AccordionItem, SidebarPatient } from "../../components";
 import { useState, useEffect } from "react";
 
 function PendingConsentRequest() {
-
+  var ABHAID = ""
+  const user = localStorage.getItem("user");
+  if (user) {
+    ABHAID = JSON.parse(user).id
+  }
   const [consentArtifacts, setConsentArtifacts] = useState([
     { consentHeading: "No requests" },
   ]);
 
   const getConsentArtifacts = () => {
-    fetch("http://localhost:9100/patient/getAllConsents/2", {
+    fetch("http://localhost:9100/patient/getAllConsents/" + ABHAID, {
       headers: {
         "Content-Type": "application/json",
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
     })
       .then((data) => data.json())
       .then((response) => {
-        setConsentRequests(response.object);
+        setConsentArtifacts(response);
       });
   };
   useEffect(() => {
@@ -41,7 +46,7 @@ function PendingConsentRequest() {
       </div>
       <div className="mx-[38%]">
         <Accordion>
-          {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].map((element, index) => {
+          {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].filter((element) => !element.consentAcknowledged).map((element, index) => {
             return <AccordionItem
               key={index}
               artifactId={element.artifactId}
@@ -50,6 +55,9 @@ function PendingConsentRequest() {
               doctorID={element.doctorID}
               emergency={element.emergency}
               timestamp={element.timestamp} 
+              items={element.consentItems}
+              approved={element.approved} 
+              consentAcknowledged={element.consentAcknowledged}
             />;
           })}
         </Accordion>

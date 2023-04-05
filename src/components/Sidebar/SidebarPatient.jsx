@@ -50,15 +50,6 @@ function SidebarPatient() {
         />
       </button>
 
-      <div className="sidebar-divider" />
-
-      <button className="sidebar-emergency-button">
-        <SidebarItem
-          imgName={constants.REACT_APP_SIDEBAR_WARNING_IMG}
-          alt="Emrgncy"
-          sidebarText="Emergency Consent"
-        />
-      </button>
     </div>
   );
 }

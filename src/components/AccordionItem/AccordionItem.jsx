@@ -7,13 +7,37 @@ function AccordionItem({
   doctorID,
   timestamp,
   emergency,
-  setConsentArtifacts
+  setConsentArtifacts,
+  approved,
+  consentAcknowledged,
+  items,
+  ongoing
 }) {
   const updateStatusOfConsent = (requestBody) => {
+    for (var i = 0; i < items.length; i++) {
+      fetch("http://localhost:9100/patient/updateConsentItemStatus", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization' : 'Bearer ' + localStorage.getItem("token")
+        },
+        body: JSON.stringify({
+          itemId: items[i].id,
+          consentAcknowledged: true,
+          approved: items[i].approved,
+        }),
+      })
+        .then((data) => data.json())
+        .then((response) => {
+          setConsentArtifacts(response);
+        });
+    }
+
     fetch("http://localhost:9100/patient/updateConsentStatus", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
       body: JSON.stringify(requestBody),
     })
@@ -22,7 +46,13 @@ function AccordionItem({
         setConsentArtifacts(response);
       });
   };
-
+  const updateItems = (e, id) => {
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id == id) {
+        items[i].approved = e.target.checked;
+      }
+    }
+  }
   return (
     <div>
       <div>
@@ -34,6 +64,7 @@ function AccordionItem({
         <ul>
           {consentItems.map((consent) => (
             <li key={consent.id}>
+              <input type="checkbox" value={consent.id} onClick={(e) => updateItems(e, consent.id)} disabled={consent.consentAcknowledged} checked={!consent.consentAcknowledged ? null : consent.approved}/>
               <p>Message: {consent.consentMessage}</p>
               {/* <p>
                     Acknowledged: {consent.consentAcknowledged ? "Yes" : "No"}
@@ -43,17 +74,21 @@ function AccordionItem({
                 {new Date(consent.fromDate).toDateString()} -{" "}
                 {new Date(consent.toDate).toDateString()}
               </p>
-              <p>Hospital ID: {consent.hospitalId}</p>
-              {!consent.consentAcknowledged && (
+
+            </li>
+          ))}
+        </ul>
+        {!consentAcknowledged && (
                 <div>
                   <div className="flex flex-row justify-between">
                     <button
                       className="bg-[green] text-white p-[2%] text-center"
                       onClick={() => {
                         const obj = {
-                          itemId: consent.id,
+                          itemId: artifactId,
                           consentAcknowledged: true,
                           approved: true,
+                          ongoing: true
                         };
                         return updateStatusOfConsent(obj);
                       }}
@@ -65,9 +100,10 @@ function AccordionItem({
                       className="bg-[red] text-white p-[3%] text-center"
                       onClick={() => {
                         const obj = {
-                          itemId: consent.id,
+                          itemId: artifactId,
                           consentAcknowledged: true,
                           approved: false,
+                          ongoing: false
                         };
                         return updateStatusOfConsent(obj)}}
                     >
@@ -76,12 +112,12 @@ function AccordionItem({
                   </div>
                 </div>
               )}
-              {consent.consentAcknowledged && (
-                <p>Consent already acknowledged</p>
-              )}
-            </li>
-          ))}
-        </ul>
+              {consentAcknowledged &&
+               approved && 
+               <p className="font-bold">Consent Approved</p>}
+              {consentAcknowledged &&
+               !approved && 
+               <p className="font-bold">Consent Rejected</p>}
       </div>
     </div>
   );
