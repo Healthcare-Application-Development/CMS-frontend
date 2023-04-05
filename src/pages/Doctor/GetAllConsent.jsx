@@ -5,13 +5,20 @@ import { Sidebar } from "../../components";
 function getAllConsent() {
     
   const [doctorConsentList, setDoctorConsentList] = useState([]);
-  const UPRNID = "1";
-
+  var UPRNID = "1";
+  const user = localStorage.getItem("user");
+  if (user) {
+    UPRNID = JSON.parse(user).id
+  }
   const getAllConsents = () => {
-    fetch("http://localhost:9100/doctor/getAllConsents?id=" + UPRNID)
+    fetch("http://localhost:9100/doctor/getAllConsents?id=" + UPRNID, {
+      headers: {
+        'Authorization' : 'Basic ' + localStorage.getItem("token")
+      }
+    })
       .then((data) => data.json())
       .then((response) => {
-        setDoctorConsentList(response);
+        setDoctorConsentList(response.object);
       });
   };
   useEffect(() => {
@@ -21,7 +28,7 @@ function getAllConsent() {
 
     <div className="flex items-center justify-start">
     <Sidebar />
-    <div className="w-[85%] h-[100%] ">
+    <div className="w-[70%] h-[100%] ml-[20%] mt-[5%]">
     <div>
       <div className="bg-slate-200 rounded-sm ">
         <div

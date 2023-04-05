@@ -7,7 +7,7 @@ function Textbox(props) {
     return (
         <div className='px-5'>
             <Form.Label className='form-label-style'>{props.label}</Form.Label>
-            <Form.Control type={props.type} />
+            <Form.Control type={props.type} onChange={props.onChange}/>
         </div>
     )
 }
