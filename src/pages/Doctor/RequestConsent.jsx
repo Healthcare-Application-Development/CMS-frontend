@@ -4,7 +4,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
 import { constants } from "../../constants";
-import { Form } from "react-bootstrap";
+import { Form, Table } from "react-bootstrap";
 
 function RequestConsent() {
   const [ABHA, setABHA] = useState("1");
@@ -113,10 +113,10 @@ function RequestConsent() {
         'Authorization' : 'Basic ' + localStorage.getItem("token")
       },
     })
-      .then((data) => data.json())
+        .then((data) => data.text())
       .then((response) => {
         if (response !== null) {
-          setConsentResponse(JSON.stringify(response));
+          setConsentResponse(response);
           // consentRequest = {};
         } else setConsentResponse(null);
       });
@@ -135,14 +135,14 @@ function RequestConsent() {
       <div className="w-[75%] h-[95%] flex flex-col">
         <SearchBar />
         <Sidebar />
-        <div className="w-full shadow-lg p-6 ml-[30%] mt-[5%]">
+        <div className="w-full shadow-md p-6 ml-[30%] mt-[3%]">
           <div className="flex justify-between">
             <h3>Choose Request Type</h3>
-            <h3 className="text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg">
-              clear all
+            <h3 className="text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg text-[20px]">
+              Clear All
             </h3>
           </div>
-          <div className="flex bg-slate-300 h-[512px] justify-around p-11 rounded-sm border-x-slate-900">
+          <div className="flex bg-slate-300 h-[90%] justify-around p-11 rounded-sm border-x-slate-900">
             <div className="flex flex-col">
               {/* <Textbox
                 label="Patient ABHA ID"
@@ -186,14 +186,37 @@ function RequestConsent() {
             />
             <Button txt="Send OTP" color="green" />
           </div>
-
-          {consentRequest.length > 0 ? (
-            <div>{JSON.stringify(consentRequest)}</div>
-          ) : null}
-
-          {consentResponse === null ? null : (
-            <div>{JSON.stringify(consentResponse)}</div>
-          )}
+          {consentResponse !== null ? 
+          <div className="font-bold text-center mt-[1%] text-[20px]">{consentResponse}</div> : null}
+          {consentRequest.consentItems.length > 0 && 
+          <>
+          <p className="text-[20px]">Added Requests</p>
+          <Table striped bordered hover >
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Record Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                consentRequest.consentItems.map((element) => {
+                  return (
+                        <tr>
+                          <td>{element.patientID}</td>
+                          <td>{element.consentMessage}</td>
+                          <td>{new Date(element.fromDate).toDateString()}</td>
+                          <td>{new Date(element.toDate).toDateString()}</td>
+                        </tr>
+                  )
+                })
+              }
+            </tbody>
+        </Table>
+          </>
+        }
         </div>
       </div>
     </>
