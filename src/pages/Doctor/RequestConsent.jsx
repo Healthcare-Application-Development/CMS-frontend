@@ -1,20 +1,27 @@
 import React, { useState } from "react";
-import { Dropdown, SearchBar, Button, Header, Textbox } from "../../components";
+import { Dropdown, SearchBar, Button, Header, Textbox, Sidebar } from "../../components";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
 import { constants } from "../../constants";
+import { Form } from "react-bootstrap";
 
 function RequestConsent() {
+  const [ABHA, setABHA] = useState("1");
+  var UPRNID = "";
+  const user = localStorage.getItem("user");
+
+  if (user) {
+    UPRNID = JSON.parse(user).id
+  }
   const [consentRequest, setConsentRequest] = useState({
-    doctorID: 1,
-    patientID: 2,
+    doctorID: UPRNID,
     timestamp: new Date(Date.now()).toISOString(),
     emergency: false,
-    consentItems: [],
+    ongoing: true,
+    consentItems: []
   });
 
-  const [ABHA, setABHA] = useState("1");
   const [consentResponse, setConsentResponse] = useState(null);
 
   const [selectedRecordType, setSelectedRecordType] = useState("");
@@ -54,8 +61,8 @@ function RequestConsent() {
     }
 
     return {
-      doctorID: 1,
-      patientID: 2,
+      doctorID: UPRNID,
+      patientID: ABHA,
       consentMessage: constants.recordTypes[selectedRecordType],
       consentAcknowledged: false,
       approved: false,
@@ -64,15 +71,14 @@ function RequestConsent() {
         "-" +
         ((fromDate.getMonth() + 1) <= 10 ? "0" + (fromDate.getMonth() + 1) : (fromDate.getMonth() + 1)) +
         "-" +
-        (fromDate.getDate() <= 10 ? "0" + fromDate.getDate() : fromDate.getDate()),
+        (fromDate.getDate() < 10 ? "0" + fromDate.getDate() : fromDate.getDate()),
       toDate:
         toDate.getFullYear() +
         "-" +
         ((toDate.getMonth() + 1) <= 10 ? "0" + (toDate.getMonth() + 1) : (toDate.getMonth() + 1))+
         "-" +
         (toDate.getDate() < 10 ? "0" + toDate.getDate() : toDate.getDate()),
-      consentArtifcat: null,
-      hospitalId: 1,
+      consentArtifcat: null
     };
   };
 
@@ -81,6 +87,7 @@ function RequestConsent() {
     if (consentItem) {
       setConsentRequest((prevState) => ({
         ...prevState,
+        patientID: ABHA,
         consentItems: [...prevState.consentItems, consentItem],
       }));
       console.log(
@@ -93,27 +100,41 @@ function RequestConsent() {
   };
 
   const sendRequest = () => {
+    console.log(ABHA)
+    setConsentRequest((prevState) => ({
+      ...prevState,
+      patientID: ABHA
+    }));
     fetch("http://localhost:9100/doctor/store-consent-request", {
       body: JSON.stringify(consentRequest),
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization' : 'Basic ' + localStorage.getItem("token")
       },
     })
       .then((data) => data.json())
       .then((response) => {
         if (response !== null) {
           setConsentResponse(JSON.stringify(response));
-          setConsentRequest([]);
+          // consentRequest = {};
         } else setConsentResponse(null);
       });
+      setConsentRequest({
+          doctorID: UPRNID,
+          timestamp: new Date(Date.now()).toISOString(),
+          emergency: false,
+          ongoing: true,
+          consentItems: []
+        });
   };
 
   return (
     <>
       <Header />
-      <div className="w-[85%] h-[95%] flex flex-col">
+      <div className="w-[75%] h-[95%] flex flex-col">
         <SearchBar />
+        <Sidebar />
         <div className="w-full shadow-lg p-6 ml-[30%] mt-[5%]">
           <div className="flex justify-between">
             <h3>Choose Request Type</h3>
@@ -123,10 +144,14 @@ function RequestConsent() {
           </div>
           <div className="flex bg-slate-300 h-[512px] justify-around p-11 rounded-sm border-x-slate-900">
             <div className="flex flex-col">
-              <Textbox
+              {/* <Textbox
                 label="Patient ABHA ID"
                 onChange={(e) => setABHA((text) => text + e.target.value)}
-              />
+              /> */}
+              <div  className="w-[85%] ml-[7%]">
+                  <Form.Label>Patient ABHA ID</Form.Label>
+                  <Form.Control onChange={(e) => setABHA(e.target.value)}/>
+              </div>
               <Dropdown
                 Label="Health Record Category"
                 options={constants.recordTypes}
