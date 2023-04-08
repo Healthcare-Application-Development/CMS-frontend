@@ -11,7 +11,8 @@ function AccordionItem({
   approved,
   consentAcknowledged,
   items,
-  ongoing
+  ongoing,
+  patientId
 }) {
   const updateStatusOfConsent = (requestBody) => {
     for (var i = 0; i < items.length; i++) {
@@ -25,6 +26,7 @@ function AccordionItem({
           itemId: items[i].id,
           consentAcknowledged: true,
           approved: items[i].approved,
+          patientId: patientId
         }),
       })
         .then((data) => data.json())
@@ -88,7 +90,8 @@ function AccordionItem({
                           itemId: artifactId,
                           consentAcknowledged: true,
                           approved: true,
-                          ongoing: true
+                          ongoing: true,
+                          patientId: patientId
                         };
                         return updateStatusOfConsent(obj);
                       }}
@@ -103,7 +106,8 @@ function AccordionItem({
                           itemId: artifactId,
                           consentAcknowledged: true,
                           approved: false,
-                          ongoing: false
+                          ongoing: false,
+                          patientId: patientId
                         };
                         return updateStatusOfConsent(obj)}}
                     >
