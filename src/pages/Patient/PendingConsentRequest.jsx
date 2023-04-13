@@ -58,6 +58,7 @@ function PendingConsentRequest() {
               items={element.consentItems}
               approved={element.approved} 
               consentAcknowledged={element.consentAcknowledged}
+              patientId={ABHAID}
             />;
           })}
         </Accordion>
