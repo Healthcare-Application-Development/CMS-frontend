@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { Sidebar } from "../../components";
 
 function getAllConsent() {
@@ -28,17 +28,11 @@ function getAllConsent() {
 
     <div className="flex items-center justify-start">
     <Sidebar />
-    <div className="w-[70%] h-[100%] ml-[20%] mt-[5%]">
-    <div>
+    <div className="w-[70%] h-[100%] ml-[20%] mt-[7%]">
+    <p className="text-[20px] mb-[1%]">Current Requests</p>
+    <div className="mt-[1%]">
       <div className="bg-slate-200 rounded-sm ">
-        <div
-          className="cursor-pointer text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg"
-          onClick={() => getAllConsents()}
-        >
-          Refresh
-        </div>
-        <p>currentRequest</p>
-        <Table striped bordered hover>
+        <Table striped hover>
           <thead>
             <tr>
               <th>Consent ID</th>

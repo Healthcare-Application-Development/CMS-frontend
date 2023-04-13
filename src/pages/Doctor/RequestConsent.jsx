@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Dropdown, SearchBar, Button, Header, Textbox, Sidebar } from "../../components";
+import { SearchBar, Header, Textbox, Sidebar } from "../../components";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DateRangePicker } from "react-date-range";
+import { DateRangePicker, Dropdown, Form } from 'rsuite';
 import { constants } from "../../constants";
-import { Form, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
+import isAfter from 'date-fns/isAfter';
 
 function RequestConsent() {
-  const [ABHA, setABHA] = useState("1");
+  const [ABHA, setABHA] = useState("");
   var UPRNID = "";
   const user = localStorage.getItem("user");
 
@@ -28,6 +29,7 @@ function RequestConsent() {
   const [recordSelectedError, setRecordSelectedError] = useState(false);
   const [startDateError, setStartDateError] = useState(false);
   const [endDateError, setEndDateError] = useState(false);
+  const [abhaError, setAbhaError] = useState(false);
 
   const [dateSelection, setDateSelection] = useState([
     {
@@ -38,32 +40,39 @@ function RequestConsent() {
   ]);
 
   const createConsentItem = () => {
-    const fromDate = new Date(dateSelection[0].startDate);
-    const toDate = new Date(dateSelection[0].endDate);
-
-    if (selectedRecordType == 0) {
+    console.log(dateSelection)
+    const fromDate = new Date(dateSelection[0]);
+    const toDate = new Date(dateSelection[1]);
+    // console.log(selectedRecordType)
+    if (ABHA.length == 0) {
+        setAbhaError(true);
+        return;
+    } else {
+        setAbhaError(false);
+    }
+    if (selectedRecordType.length == 0) {
       setRecordSelectedError(true);
       return;
     } else {
       setRecordSelectedError(false);
     }
-    if (dateSelection[0].startDate == null) {
+    if (dateSelection[0] == null) {
       setStartDateError(true);
       return;
     } else {
       setStartDateError(false);
     }
-    if (dateSelection[0].endDate == null) {
+    if (dateSelection[1] == null) {
       setEndDateError(true);
       return;
     } else {
       setEndDateError(false);
     }
-
+    console.log("Ok")
     return {
       doctorID: UPRNID,
       patientID: ABHA,
-      consentMessage: constants.recordTypes[selectedRecordType],
+      consentMessage: selectedRecordType,
       consentAcknowledged: false,
       approved: false,
       fromDate:
@@ -130,24 +139,20 @@ function RequestConsent() {
   };
 
   return (
-    <>
-      <Header />
-      <div className="w-[75%] h-[95%] flex flex-col">
-        <SearchBar />
+    <div className="flex flex-col">
+        
+      <div className="w-[75%] h-[95%] flex flex-col h-[100vh]">
+        {/* <SearchBar /> */}
         <Sidebar />
-        <div className="w-full shadow-md p-6 ml-[30%] mt-[3%]">
+        {/* <div className="w-full p-6 ml-[30%] mt-[3%]">
           <div className="flex justify-between">
             <h3>Choose Request Type</h3>
             <h3 className="text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg text-[20px]">
               Clear All
             </h3>
           </div>
-          <div className="flex bg-slate-300 h-[90%] justify-around p-11 rounded-sm border-x-slate-900">
+          <div className="flex h-[90%] justify-around p-11 rounded-sm border-x-slate-900">
             <div className="flex flex-col">
-              {/* <Textbox
-                label="Patient ABHA ID"
-                onChange={(e) => setABHA((text) => text + e.target.value)}
-              /> */}
               <div  className="w-[85%] ml-[7%]">
                   <Form.Label>Patient ABHA ID</Form.Label>
                   <Form.Control onChange={(e) => setABHA(e.target.value)}/>
@@ -217,9 +222,88 @@ function RequestConsent() {
         </Table>
           </>
         }
+        </div> */}
+        <div className="ml-[50%] mt-[5%] p-[5%] w-[40%]">
+          <p className="text-[24px] mb-[5%] text-center font-bold">Request Consent</p>
+          <Form fluid>
+            <Form.Group >
+              <Form.ControlLabel className="font-semibold">Patient ABHAID *</Form.ControlLabel>
+              <Form.Control type="text" onChange={(e) => setABHA(e)} errorMessage={abhaError ? "ABHA ID not available" : null} />
+              <Form.HelpText>Patient ABHAID needed</Form.HelpText>
+            </Form.Group>
+            <Form.Group className="mt-[4%]">
+              <Form.ControlLabel className="font-semibold">Select Record Category *</Form.ControlLabel>
+              {/* <Dropdown
+                Label="Health Record Category"
+                options={constants.recordTypes}
+                onClick={(opt) => setSelectedRecordType(opt)}
+              /> */}
+              <div>
+                <Dropdown title={selectedRecordType.length > 0 ? selectedRecordType : "Select Record Category"} size="lg">
+                    {Object.keys(constants.recordTypes).map((e) => {
+                        return <Dropdown.Item key={e} onClick={(e) => setSelectedRecordType(e.target.textContent)}>{constants.recordTypes[e]}</Dropdown.Item>
+                    })}
+                </Dropdown>
+                <Form.ErrorMessage show={recordSelectedError}>Record not selected</Form.ErrorMessage>
+              </div>
+              <Form.HelpText>Record Type needed</Form.HelpText>
+            </Form.Group>
+            <Form.Group className="mt-[4%]">
+              <Form.ControlLabel className="font-semibold">Select Range of Dates *</Form.ControlLabel>
+              <div>
+                <DateRangePicker className="w-[600px]" shouldDisableDate={date => isAfter(date, new Date())} size="lg" onOk={(e) => setDateSelection(e)}/>
+              </div>
+              <Form.ErrorMessage show={startDateError || endDateError}>Date Range has to be selected</Form.ErrorMessage>
+              <Form.HelpText>Date Range has to be chosen</Form.HelpText>
+            </Form.Group>
+            <Form.Group className="mt-[5%] flex justify-between">
+              <Button variant="success" onClick={() => addConsentItemToConsentArtifact()}>Add Request</Button>
+              <Button variant="danger" onClick={() => sendRequest()}>Send Request</Button>
+              <Button variant="warning">Send OTP</Button>
+            </Form.Group>
+            <Form.Group>
+            {/* <button className='sidebar-emergency-button bg-red-800 flex p-4 m-2 gap-3 items-center justify-center text-white'>
+                <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} className='sidebar-emergency-image' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} />
+                <span className='sidebar-emergency-text'>{constants.REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT}</span>
+            </button> */}
+            <Button variant="danger" className="w-[100%] flex flex-col items-center p-3">
+              {/* <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} width="15px" className='sidebar-emergency-image text-center' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} /> */}
+              <span>Emergency</span>
+            </Button>
+            </Form.Group>
+          </Form>
         </div>
+        {consentRequest.consentItems.length > 0 && 
+          <>
+          <p className="ml-[40%] text-center mb-[1%] text-[20px]">Added Requests</p>
+          <Table striped bordered hover className="ml-[26%]">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Record Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                consentRequest.consentItems.map((element) => {
+                  return (
+                        <tr>
+                          <td>{element.patientID}</td>
+                          <td>{element.consentMessage}</td>
+                          <td>{new Date(element.fromDate).toDateString()}</td>
+                          <td>{new Date(element.toDate).toDateString()}</td>
+                        </tr>
+                  )
+                })
+              }
+            </tbody>
+        </Table>
+          </>
+        }
       </div>
-    </>
+    </div>
   );
 }
 

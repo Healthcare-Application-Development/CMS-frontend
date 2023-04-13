@@ -56,7 +56,6 @@ export const constants = {
   },
 
   recordTypes: {
-    0: "Select Record Type",
     1: "Blood Report",
     2: "X-ray",
     3: "MRI Scanning",
