@@ -33,18 +33,18 @@ function OngoingConsentRequest() {
         <SidebarPatient />
       </div>
       <div
-        className="cursor-pointer text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg ml-[38%] mt-[6%] mr-[38%]"
+        className="cursor-pointer text-blue-600 hover:text-blue-800 hover:bg-blue-300 transition-all p-1 rounded-lg ml-[32%] mt-[6%] mr-[38%] inline-block"
         onClick={() => getConsentArtifacts()}
       >
         Refresh
       </div>
-      <div className="flex w-630 h-54 ml-[38%]">
-        <p className="font-poppins font-normal font-regular text-3xl leading-26 tracking-tighter text-black">
-          Ongoing Consent Request
+      <div className="flex w-630 h-54 ml-[32%]">
+        <p className="font-poppins font-semibold font-regular text-2xl leading-26 tracking-tighter text-black">
+          Ongoing Consent Requests
         </p>
       </div>
       <div>
-      <div className="mx-[38%]">
+      <div className="mx-[32%]  mt-[1%]">
         <Accordion>
           {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].filter((element) => element.ongoing && element.consentAcknowledged).map((element, index) => {
             return <AccordionItem

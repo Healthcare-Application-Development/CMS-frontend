@@ -223,16 +223,16 @@ function RequestConsent() {
           </>
         }
         </div> */}
-        <div className="ml-[50%] mt-[5%] p-[5%] w-[40%]">
-          <p className="text-[24px] mb-[5%] text-center font-bold">Request Consent</p>
+        <div className="ml-[45%] mt-[5%] p-[5%] w-[50%]">
+          <p className="text-[24px] mb-[5%] text-black text-center font-bold">Request Consent</p>
           <Form fluid>
             <Form.Group >
-              <Form.ControlLabel className="font-semibold">Patient ABHAID *</Form.ControlLabel>
+              <Form.ControlLabel className="font-semibold text-black">Patient ABHAID *</Form.ControlLabel>
               <Form.Control type="text" onChange={(e) => setABHA(e)} errorMessage={abhaError ? "ABHA ID not available" : null} />
               <Form.HelpText>Patient ABHAID needed</Form.HelpText>
             </Form.Group>
             <Form.Group className="mt-[4%]">
-              <Form.ControlLabel className="font-semibold">Select Record Category *</Form.ControlLabel>
+              <Form.ControlLabel className="font-semibold text-black">Select Record Category *</Form.ControlLabel>
               {/* <Dropdown
                 Label="Health Record Category"
                 options={constants.recordTypes}
@@ -249,7 +249,7 @@ function RequestConsent() {
               <Form.HelpText>Record Type needed</Form.HelpText>
             </Form.Group>
             <Form.Group className="mt-[4%]">
-              <Form.ControlLabel className="font-semibold">Select Range of Dates *</Form.ControlLabel>
+              <Form.ControlLabel className="font-semibold text-black">Select Range of Dates *</Form.ControlLabel>
               <div>
                 <DateRangePicker className="w-[600px]" shouldDisableDate={date => isAfter(date, new Date())} size="lg" onOk={(e) => setDateSelection(e)}/>
               </div>
@@ -257,9 +257,9 @@ function RequestConsent() {
               <Form.HelpText>Date Range has to be chosen</Form.HelpText>
             </Form.Group>
             <Form.Group className="mt-[5%] flex justify-between">
-              <Button variant="success" onClick={() => addConsentItemToConsentArtifact()}>Add Request</Button>
-              <Button variant="danger" onClick={() => sendRequest()}>Send Request</Button>
-              <Button variant="warning">Send OTP</Button>
+              <Button variant="primary" onClick={() => addConsentItemToConsentArtifact()}>Add Request</Button>
+              <Button variant="success" onClick={() => sendRequest()}>Send Request</Button>
+              <Button variant="dark">Send OTP</Button>
             </Form.Group>
             <Form.Group>
             {/* <button className='sidebar-emergency-button bg-red-800 flex p-4 m-2 gap-3 items-center justify-center text-white'>
@@ -275,8 +275,8 @@ function RequestConsent() {
         </div>
         {consentRequest.consentItems.length > 0 && 
           <>
-          <p className="ml-[40%] text-center mb-[1%] text-[20px]">Added Requests</p>
-          <Table striped bordered hover className="ml-[26%]">
+          <p className="ml-[40%] text-center mb-[1%] text-[20px] text-black font-semibold">Added Requests</p>
+          <Table striped bordered hover className="ml-[33%]" size="sm" style={{width:'80%'}}>
             <thead>
               <tr>
                 <th>Patient ID</th>
