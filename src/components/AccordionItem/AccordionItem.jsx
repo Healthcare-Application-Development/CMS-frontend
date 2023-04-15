@@ -1,5 +1,5 @@
-import React from "react";
-import { Accordion } from "react-bootstrap";
+import React, { useState } from "react";
+import { Accordion, Button, Modal } from "react-bootstrap";
 
 function AccordionItem({
   artifactId,
@@ -55,35 +55,37 @@ function AccordionItem({
       }
     }
   }
+  const [show, setShow] = useState(false);
   return (
     <div>
-      <div>
-        <h2>Artifact ID: {artifactId}</h2>
-        <p>Doctor ID: {doctorID}</p>
-        <p>Time of request: {new Date(timestamp).toDateString()}</p>
-        <p>Emergency: {emergency ? "Yes" : "No"}</p>
-        <h3>Consent Items:</h3>
-        <ul>
-          {consentItems.map((consent) => (
-            <li key={consent.id}>
-              <input type="checkbox" value={consent.id} onClick={(e) => updateItems(e, consent.id)} disabled={consent.consentAcknowledged} checked={!consent.consentAcknowledged ? null : consent.approved}/>
-              <p>Message: {consent.consentMessage}</p>
-              {/* <p>
-                    Acknowledged: {consent.consentAcknowledged ? "Yes" : "No"}
-                  </p>
-                  <p>Approved: {consent.approved ? "Yes" : "No"}</p> */}
-              <p>
-                {new Date(consent.fromDate).toDateString()} -{" "}
-                {new Date(consent.toDate).toDateString()}
-              </p>
-
-            </li>
+      <div className="mt-[2%] card p-4 border-none shadow-md mb-[3%]">
+        <div className="text-[20px] font-black mb-[2%] text-black">Artifact ID: {artifactId}</div>
+        <div className="font-semibold">
+          <p>Doctor ID : {doctorID}</p>
+          <p>Date of Request : {new Date(timestamp).toDateString()}</p>
+          <p className="mb-[2%]">Emergency : {emergency ? "Yes" : "No"}</p>
+        </div>
+        {/* <ul style={}> */}
+          {consentItems && consentItems.length > 0 && consentItems.map((consent) => (
+              <div key={consent.id} className="bg-[#444444] p-3 rounded-[20px] text-white opacity-70 mt-1 mb-1 font-bold">
+                <input type="checkbox" className="inline" value={consent.id} onClick={(e) => updateItems(e, consent.id)} disabled={consent.consentAcknowledged} checked={!consent.consentAcknowledged ? null : consent.approved}/>
+                <span className="ml-[1.5%]">{consent.consentMessage}</span>
+                {/* <p>
+                      Acknowledged: {consent.consentAcknowledged ? "Yes" : "No"}
+                    </p>
+                    <p>Approved: {consent.approved ? "Yes" : "No"}</p> */}
+                <p>
+                  {new Date(consent.fromDate).toDateString()} -{" "}
+                  {new Date(consent.toDate).toDateString()}
+                </p>
+              </div>
           ))}
-        </ul>
+        {/* </ul> */}
         {!consentAcknowledged && (
-                <div>
+                <div className="mt-[3%]">
                   <div className="flex flex-row justify-between">
-                    <button
+                    <Button
+                      variant="success"
                       className="bg-[green] text-white p-[2%] text-center"
                       onClick={() => {
                         const obj = {
@@ -97,9 +99,10 @@ function AccordionItem({
                       }}
                     >
                       Approve
-                    </button>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      // type="button"
+                      variant="danger"
                       className="bg-[red] text-white p-[3%] text-center"
                       onClick={() => {
                         const obj = {
@@ -112,16 +115,37 @@ function AccordionItem({
                         return updateStatusOfConsent(obj)}}
                     >
                       Reject
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
               {consentAcknowledged &&
                approved && 
-               <p className="font-bold">Consent Approved</p>}
+               <p className="font-bold mt-[2%]">
+                <img src="/tick.png" width="16px" className="inline"></img>
+                <span className="ml-[2%] text-[green]">Consent Approved</span>
+               </p>}
               {consentAcknowledged &&
                !approved && 
-               <p className="font-bold">Consent Rejected</p>}
+               <p className="font-bold mt-[2%]">
+                <img src="/cross.png" width="16px" className="inline"></img>
+                <span className="ml-[2%] text-[red]">Consent Rejected</span>
+                </p>}
+              {consentAcknowledged &&
+               approved && ongoing &&
+               <div className="text-center">
+                 <Button variant="danger" className="w-[25%] mt-[3%] text-center" onClick={() => setShow(true)}>Revoke</Button>
+                </div>}
+              <Modal show={show}>
+                  <Modal.Header closeButton onClick={() => setShow(false)} className="text-[20px] text-black">Confirmation</Modal.Header>
+                  <Modal.Body className="text-[16px] text-black">
+                      Are you sure you want to revoke this consent?
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={() => setShow(false)}>No</Button>
+                    <Button variant="success" onClick={() => console.log(artifactId)}>Yes</Button>
+                  </Modal.Footer>
+              </Modal>
       </div>
     </div>
   );

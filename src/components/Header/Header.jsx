@@ -12,7 +12,7 @@ function Header() {
     navigate("/")
   }
     return (
-      <div className='fixed w-[100%] z-99999'>
+      <div className='fixed w-[100%]' style={{zIndex:'6'}}>
         <Navbar expand="lg" className='navbar-bg'>
           <Navbar.Brand className='navbar-brand-style text-white'>{constants.REACT_APP_NAV_BRAND}</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
