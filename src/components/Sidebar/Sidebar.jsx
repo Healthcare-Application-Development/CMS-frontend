@@ -14,8 +14,8 @@ function Sidebar() {
           <div className='sidebar-divider' />
           
           <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_HISTORY_IMG} alt={constants.REACT_APP_SIDEBAR_HISTORY_IMG} sidebarText={constants.REACT_APP_SIDEBAR_HISTORY} onClick={() => navigate("/doctor/getAllConsents")}/>
-          <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG} alt={constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG} sidebarText={constants.REACT_APP_SIDEBAR_VIEW_DATA} />
-          <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_SHARED_CONSENT_IMG} alt={constants.REACT_APP_SIDEBAR_SHARED_CONSENT_IMG} sidebarText={constants.REACT_APP_SIDEBAR_SHARED_CONSENTS} />
+          {/* <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG} alt={constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG} sidebarText={constants.REACT_APP_SIDEBAR_VIEW_DATA} onClick={() => navigate("/doctor/getRecords")}/> */}
+          <SidebarItem imgName = {constants.REACT_APP_SIDEBAR_SHARED_CONSENT_IMG} alt={constants.REACT_APP_SIDEBAR_SHARED_CONSENT_IMG} sidebarText={constants.REACT_APP_SIDEBAR_SHARED_CONSENTS} onClick={() => navigate("/doctor/sharedConsents")}/>
           <div className='sidebar-divider' />
           
           {/* <div className='sidebar-emergency-style'>

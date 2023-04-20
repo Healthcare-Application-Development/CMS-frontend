@@ -2,6 +2,7 @@ import React from "react";
 import { Accordion } from "react-bootstrap";
 import { AccordionItem, SidebarPatient } from "../../components";
 import { useState, useEffect } from "react";
+import AESUtils from "../../encryption/AESUtils";
 
 function PendingConsentRequest() {
   var ABHAID = ""
@@ -14,7 +15,7 @@ function PendingConsentRequest() {
   ]);
 
   const getConsentArtifacts = () => {
-    fetch("http://localhost:9100/patient/getAllConsents/" + ABHAID, {
+    fetch("http://localhost:9100/patient/getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
       headers: {
         "Content-Type": "application/json",
         'Authorization' : 'Bearer ' + localStorage.getItem("token")
@@ -59,6 +60,8 @@ function PendingConsentRequest() {
               approved={element.approved} 
               consentAcknowledged={element.consentAcknowledged}
               patientId={ABHAID}
+              isDelegated={element.isDelegated}
+              revoked={element.revoked}
             />;
           })}
         </Accordion>
