@@ -1,5 +1,5 @@
 import { Header, Sidebar } from "./components";
-import { Home, Doctor, Patient, CreateHospital,GetAllConsent, ReqestConsent } from "./pages";
+import { Home, Doctor, Patient, CreateHospital,GetAllConsent, ReqestConsent, GetRecords, SharedConsent } from "./pages";
 import { GetPatientRecord, PatientOngoingCR, PatientPastCR, PatientPendingCR, } from "./pages";
 import { constants } from "./constants";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -16,6 +16,8 @@ function App() {
         <Route path="/doctor" element={<Doctor />} />
         <Route path="/doctor/requestConsent" element={<ReqestConsent />} />
         <Route path="/doctor/getAllConsents" element={<GetAllConsent />} />
+        <Route path="/doctor/getRecords" element={<GetRecords />} />
+        <Route path="/doctor/sharedConsents" element={<SharedConsent />} />
 
         <Route path="/patient/getMyRecord" element={<GetPatientRecord/>} />
         <Route path="/patient/PatientOngoingCR" element={<PatientOngoingCR/>} />

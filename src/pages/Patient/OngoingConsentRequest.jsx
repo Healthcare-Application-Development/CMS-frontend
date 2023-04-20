@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AccordionItem, SidebarPatient } from "../../components";
 import { Accordion } from "react-bootstrap";
+import AESUtils from "../../encryption/AESUtils";
 
 function OngoingConsentRequest() {
   var ABHAID = ""
@@ -13,7 +14,7 @@ function OngoingConsentRequest() {
   ]);
 
   const getConsentArtifacts = () => {
-    fetch("http://localhost:9100/patient/getAllConsents/" + ABHAID, {
+    fetch("http://localhost:9100/patient/getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
       headers: {
         "Content-Type": "application/json",
         'Authorization' : 'Bearer ' + localStorage.getItem("token")
@@ -46,7 +47,7 @@ function OngoingConsentRequest() {
       <div>
       <div className="mx-[32%]  mt-[1%]">
         <Accordion>
-          {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].filter((element) => element.ongoing && element.consentAcknowledged).map((element, index) => {
+          {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].filter((element) => element.ongoing && element.consentAcknowledged && !element.revoked).map((element, index) => {
             return <AccordionItem
               key={index}
               artifactId={element.artifactId}
@@ -59,6 +60,8 @@ function OngoingConsentRequest() {
               approved={element.approved} 
               consentAcknowledged={element.consentAcknowledged}
               ongoing={true}
+              isDelegated={element.isDelegated}
+              revoked={element.revoked}
             />;
           })}
         </Accordion>

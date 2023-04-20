@@ -6,6 +6,9 @@ export {default as CreateHospital} from './CreateHospital';
 
 export {default as Doctor} from './Doctor/Doctor';
 export {default as GetAllConsent} from './Doctor/GetAllConsent';
+export {default as GetRecords} from './Doctor/GetRecords';
+export {default as SharedConsent} from './Doctor/SharedConsent';
+
 
 export {default as Patient} from './Patient/Patient';
 export {default as GetPatientRecord} from './Patient/GetPatientRecord';

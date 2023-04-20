@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {Alert, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Header, Textbox } from '../../components';
+import AESUtils from '../../encryption/AESUtils';
 
 function Home() {
   const [selectedOption, setSelectedOption] = useState("")
@@ -12,7 +13,7 @@ function Home() {
   const onLogin = () => {
     const obj = {
       id: username,
-      password,
+      password : AESUtils.encrypt(password),
       role: selectedOption
     }
     fetch("http://localhost:9100/authenticate", {

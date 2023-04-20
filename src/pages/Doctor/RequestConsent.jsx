@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchBar, Header, Textbox, Sidebar } from "../../components";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DateRangePicker, Dropdown, Form } from 'rsuite';
+import { Checkbox, DateRangePicker, Dropdown, Form } from 'rsuite';
 import { constants } from "../../constants";
 import { Button, Table } from "react-bootstrap";
 import isAfter from 'date-fns/isAfter';
+import AESUtils from "../../encryption/AESUtils";
 
 function RequestConsent() {
   const [ABHA, setABHA] = useState("");
@@ -16,15 +17,16 @@ function RequestConsent() {
     UPRNID = JSON.parse(user).id
   }
   const [consentRequest, setConsentRequest] = useState({
-    doctorID: UPRNID,
+    doctorID: AESUtils.encrypt(UPRNID),
     timestamp: new Date(Date.now()).toISOString(),
     emergency: false,
     ongoing: true,
-    consentItems: []
+    consentItems: [],
+    delegationRequired: false
   });
 
   const [consentResponse, setConsentResponse] = useState(null);
-
+  const [isDelegated, setIsDelegated] = useState(false);
   const [selectedRecordType, setSelectedRecordType] = useState("");
   const [recordSelectedError, setRecordSelectedError] = useState(false);
   const [startDateError, setStartDateError] = useState(false);
@@ -40,7 +42,6 @@ function RequestConsent() {
   ]);
 
   const createConsentItem = () => {
-    console.log(dateSelection)
     const fromDate = new Date(dateSelection[0]);
     const toDate = new Date(dateSelection[1]);
     // console.log(selectedRecordType)
@@ -68,11 +69,10 @@ function RequestConsent() {
     } else {
       setEndDateError(false);
     }
-    console.log("Ok")
     return {
-      doctorID: UPRNID,
-      patientID: ABHA,
-      consentMessage: selectedRecordType,
+      doctorID: AESUtils.encrypt(UPRNID),
+      patientID: AESUtils.encrypt(ABHA),
+      consentMessage: AESUtils.encrypt(selectedRecordType),
       consentAcknowledged: false,
       approved: false,
       fromDate:
@@ -87,7 +87,9 @@ function RequestConsent() {
         ((toDate.getMonth() + 1) <= 10 ? "0" + (toDate.getMonth() + 1) : (toDate.getMonth() + 1))+
         "-" +
         (toDate.getDate() < 10 ? "0" + toDate.getDate() : toDate.getDate()),
-      consentArtifcat: null
+      consentArtifcat: null,
+      ongoing: false,
+      delegationRequired: isDelegated
     };
   };
 
@@ -96,23 +98,27 @@ function RequestConsent() {
     if (consentItem) {
       setConsentRequest((prevState) => ({
         ...prevState,
-        patientID: ABHA,
+        patientID: AESUtils.encrypt(ABHA),
         consentItems: [...prevState.consentItems, consentItem],
+        delegationRequired: isDelegated
       }));
-      console.log(
-        "added consent item ",
-        consentItem,
-        "to consentArtifact ",
-        consentRequest
-      );
+      // console.log(
+      //   "added consent item ",
+      //   consentItem,
+      //   "to consentArtifact ",
+      //   consentRequest
+      // );
     }
   };
 
   const sendRequest = () => {
-    console.log(ABHA)
+    if (consentRequest.consentItems.length == 0) {
+      return;
+    }
     setConsentRequest((prevState) => ({
       ...prevState,
-      patientID: ABHA
+      patientID: AESUtils.encrypt(ABHA),
+      delegationRequired: isDelegated
     }));
     fetch("http://localhost:9100/doctor/store-consent-request", {
       body: JSON.stringify(consentRequest),
@@ -130,14 +136,59 @@ function RequestConsent() {
         } else setConsentResponse(null);
       });
       setConsentRequest({
-          doctorID: UPRNID,
+          doctorID: AESUtils.encrypt(UPRNID),
           timestamp: new Date(Date.now()).toISOString(),
           emergency: false,
           ongoing: true,
           consentItems: []
         });
-  };
 
+  };
+  const emergencyConsent = () => {
+    if (consentRequest.consentItems.length == 0) {
+      return;
+    }
+    var consentItems = consentRequest.consentItems;
+    for (var i = 0; i < consentItems.length; i++) {
+      consentItems[i].consentAcknowledged = true;
+      consentItems[i].approved = true;
+      consentItems[i].ongoing = true;
+      consentItems[i].isDelegated = isDelegated;
+    }
+    const req = {
+      ...consentRequest,
+      consentItems: consentItems,
+      patientID: AESUtils.encrypt(ABHA),
+      emergency: true,
+      doctorID: AESUtils.encrypt(UPRNID),
+      consentAcknowledged: true,
+      approved: true,
+      ongoing: true
+    };
+      fetch("http://localhost:9100/mediatorServiceRequestController/call-mediator-service", {
+        body: JSON.stringify(req),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization' : 'Bearer ' + localStorage.getItem("token")
+        },
+      })
+        .then((data) => data.text())
+      .then((response) => {
+        if (response !== null) {
+          setConsentResponse(response);
+          // consentRequest = {};
+        } else setConsentResponse(null);
+      });
+      setConsentRequest({
+          doctorID: AESUtils.encrypt(UPRNID),
+          timestamp: new Date(Date.now()).toISOString(),
+          emergency: false,
+          ongoing: true,
+          consentItems: []
+        });
+
+  }
   return (
     <div className="flex flex-col">
         
@@ -249,6 +300,12 @@ function RequestConsent() {
               <Form.HelpText>Record Type needed</Form.HelpText>
             </Form.Group>
             <Form.Group className="mt-[4%]">
+              <Form.ControlLabel className="font-semibold text-black">Delegation of Request *</Form.ControlLabel>
+              <Checkbox className="inline text-black" onChange={(val, checked) => setIsDelegated(checked)}>Do you want to allow delegation of request to one doctor?</Checkbox>
+              <Form.ErrorMessage show={startDateError || endDateError}>Date Range has to be selected</Form.ErrorMessage>
+              <Form.HelpText>Date Range has to be chosen</Form.HelpText>
+            </Form.Group>
+            <Form.Group className="mt-[4%]">
               <Form.ControlLabel className="font-semibold text-black">Select Range of Dates *</Form.ControlLabel>
               <div>
                 <DateRangePicker className="w-[600px]" shouldDisableDate={date => isAfter(date, new Date())} size="lg" onOk={(e) => setDateSelection(e)}/>
@@ -266,7 +323,7 @@ function RequestConsent() {
                 <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} className='sidebar-emergency-image' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} />
                 <span className='sidebar-emergency-text'>{constants.REACT_APP_SIDEBAR_EMERGENCY_BUTTON_TEXT}</span>
             </button> */}
-            <Button variant="danger" className="w-[100%] flex flex-col items-center p-3">
+            <Button variant="danger" className="w-[100%] flex flex-col items-center p-3" onClick={() => emergencyConsent()}>
               {/* <img src={`/${constants.REACT_APP_SIDEBAR_WARNING_IMG}.png`} width="15px" className='sidebar-emergency-image text-center' alt={constants.REACT_APP_SIDEBAR_WARNING_IMG} /> */}
               <span>Emergency</span>
             </Button>
@@ -283,6 +340,7 @@ function RequestConsent() {
                 <th>Record Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Allow Delegation</th>
               </tr>
             </thead>
             <tbody>
@@ -290,10 +348,11 @@ function RequestConsent() {
                 consentRequest.consentItems.map((element) => {
                   return (
                         <tr>
-                          <td>{element.patientID}</td>
-                          <td>{element.consentMessage}</td>
+                          <td>{AESUtils.decrypt(element.patientID)}</td>
+                          <td>{AESUtils.decrypt(element.consentMessage)}</td>
                           <td>{new Date(element.fromDate).toDateString()}</td>
                           <td>{new Date(element.toDate).toDateString()}</td>
+                          <td>{element.delegationRequired ? "Yes" : "No"}</td>
                         </tr>
                   )
                 })
