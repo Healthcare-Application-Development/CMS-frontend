@@ -28,6 +28,9 @@ function Home() {
         setFailedLogin(false);
         localStorage.setItem("token", data.object.accessToken);
         localStorage.setItem("user", JSON.stringify(data.object))
+        if (selectedOption === 'guardian') {
+          navigate('/guardian/redirect_to_patient')
+        }
         if (selectedOption === 'doctor') {
           navigate('/doctor/requestConsent')
         } else {
@@ -49,6 +52,7 @@ function Home() {
                   <p className='text-[20px]'>Login as:</p>
                   <Form.Check type='radio' label="Doctor" name='login' onClick={() => setSelectedOption('doctor') }/>
                   <Form.Check type='radio' label="Patient" name='login' onClick={() => setSelectedOption('patient')}/>
+                  <Form.Check type='radio' label="Guardian" name='login' onClick={() => setSelectedOption('guardian')}/>
                 </Form.Group>
                 <Form.Group className="mb-2 form-group-style" >
                     <Textbox label = "Username" type="text" onChange={(e) => setUsername(e.target.value)}/>

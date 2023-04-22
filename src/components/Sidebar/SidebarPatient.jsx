@@ -50,6 +50,16 @@ function SidebarPatient() {
         />
       </button>
 
+      <div className="sidebar-divider" />
+
+      <button onClick={() => handleClick("/patient/AssignGuardian")}>
+        <SidebarItem
+          imgName={constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG}
+          alt={constants.REACT_APP_SIDEBAR_VIEW_DATA_IMG}
+          sidebarText={constants.REACT_APP_SIDEBAR_ASSIGN_GUARDIAN}
+        />
+      </button>
+
     </div>
   );
 }

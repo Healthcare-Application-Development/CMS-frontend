@@ -15,3 +15,4 @@ export {default as GetPatientRecord} from './Patient/GetPatientRecord';
 export {default as PatientOngoingCR} from './Patient/OngoingConsentRequest';
 export {default as PatientPastCR} from './Patient/PastConsentRequest';
 export {default as PatientPendingCR} from './Patient/PendingConsentRequest';
+export {default as AssignGuardian} from './Patient/AssignGuardian';
