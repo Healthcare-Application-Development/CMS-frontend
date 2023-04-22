@@ -48,6 +48,7 @@ function PendingConsentRequest() {
       <div className="mx-[32%] mt-[1%]">
         <Accordion>
           {(consentArtifacts["object"]===undefined)?null:consentArtifacts["object"].filter((element) => !element.consentAcknowledged).map((element, index) => {
+            console.log(element)
             return <AccordionItem
               key={index}
               artifactId={element.artifactId}

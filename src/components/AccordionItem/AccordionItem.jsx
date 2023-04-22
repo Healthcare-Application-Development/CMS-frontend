@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Accordion, Button, Modal } from "react-bootstrap";
 import AESUtils from "../../encryption/AESUtils";
+import { Notification, useToaster } from "rsuite";
 
 function AccordionItem({
   artifactId,
@@ -16,6 +17,35 @@ function AccordionItem({
   patientId,
   revoked
 }) {
+  const toaster = useToaster();
+  const revokeItemMessage = (
+    <Notification type="error" header="Revoked" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Item Revoked
+      </div>
+    </Notification>
+  );
+  const revokeConsentMessage = (
+    <Notification type="error" header="Revoked" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Consent Revoked
+      </div>
+    </Notification>
+  );
+  const consentApprovedMessage = (
+    <Notification type="success" header="success" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Consent Approved
+      </div>
+    </Notification>
+  );
+  const consentRejectedMessage = (
+    <Notification type="error" header="Rejected" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Consent Rejected
+      </div>
+    </Notification>
+  );
   const updateStatusOfConsent = (requestBody) => {
     for (var i = 0; i < items.length; i++) {
       fetch("http://localhost:9100/patient/updateConsentItemStatus", {
@@ -50,6 +80,12 @@ function AccordionItem({
       .then((data) => data.json())
       .then((response) => {
         setConsentArtifacts(response);
+        if (requestBody.approved) {
+          toaster.push(consentApprovedMessage, { placement: 'topEnd' });
+        }
+        else {
+          toaster.push(consentRejectedMessage, { placement: 'topEnd' });
+        }
       });
   };
   const updateItems = (e, id) => {
@@ -75,6 +111,7 @@ function AccordionItem({
     .then((data) => {
       setConsentArtifacts(data);
       setItemShow(false)
+      toaster.push(revokeItemMessage, { placement: 'topEnd' })
     })
   }
   const revokeConsent = (artifactId) => {
@@ -91,6 +128,7 @@ function AccordionItem({
     .then((data) => {
       setConsentArtifacts(data);
       setShow(false)
+      toaster.push(revokeConsentMessage, { placement: 'topEnd' })
     })
   }
   const [show, setShow] = useState(false);
@@ -126,7 +164,11 @@ function AccordionItem({
                 {consent.consentAcknowledged && consent.ongoing && consent.approved && <Button variant="light" disabled={consent.revoked} className="py-1 px-2" onClick={() => openRevokeItemModal(consent.id)}>
                   <span className="text-[13px] font-semibold">Revoke</span>
                 </Button>}   
-                {consent.revoked && <p className="mt-[1%]">This item is revoked</p>}
+                {consent.revoked && 
+                <div className="mt-[1.5%]">
+                    <img src="/rotate_white.png" width="16px" className="inline mr-[1%]"/>
+                    <span className="text-[13px] pt-[1%]">This item is revoked</span>
+                </div>}
               </div>
           ))}
         {/* </ul> */}
