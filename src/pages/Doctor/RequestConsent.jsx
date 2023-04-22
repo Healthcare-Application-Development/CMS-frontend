@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SearchBar, Header, Textbox, Sidebar } from "../../components";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { Checkbox, DateRangePicker, Dropdown, Form } from 'rsuite';
+import { Checkbox, DateRangePicker, Dropdown, Form, Notification, useToaster, Placeholder } from 'rsuite';
 import { constants } from "../../constants";
 import { Button, Table } from "react-bootstrap";
 import isAfter from 'date-fns/isAfter';
@@ -24,6 +24,14 @@ function RequestConsent() {
     consentItems: [],
     delegationRequired: false
   });
+  const toaster = useToaster();
+  const addMessage = (
+    <Notification type="info" header="info" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Added Request to Queue
+      </div>
+    </Notification>
+  )
 
   const [consentResponse, setConsentResponse] = useState(null);
   const [isDelegated, setIsDelegated] = useState(false);
@@ -96,6 +104,7 @@ function RequestConsent() {
   const addConsentItemToConsentArtifact = () => {
     const consentItem = createConsentItem();
     if (consentItem) {
+      toaster.push(addMessage, {placement: 'topEnd'})
       setConsentRequest((prevState) => ({
         ...prevState,
         patientID: AESUtils.encrypt(ABHA),
@@ -110,7 +119,13 @@ function RequestConsent() {
       // );
     }
   };
-
+  const sendMessage = (
+    <Notification type="success" header="success" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Request Sent
+      </div>
+    </Notification>
+  )
   const sendRequest = () => {
     if (consentRequest.consentItems.length == 0) {
       return;
@@ -131,6 +146,7 @@ function RequestConsent() {
         .then((data) => data.text())
       .then((response) => {
         if (response !== null) {
+          toaster.push(sendMessage, { placement: 'topEnd' })
           setConsentResponse(response);
           // consentRequest = {};
         } else setConsentResponse(null);
@@ -176,6 +192,7 @@ function RequestConsent() {
         .then((data) => data.text())
       .then((response) => {
         if (response !== null) {
+          toaster.push(sendMessage, { placement: 'topEnd' })
           setConsentResponse(response);
           // consentRequest = {};
         } else setConsentResponse(null);
@@ -187,7 +204,15 @@ function RequestConsent() {
           ongoing: true,
           consentItems: []
         });
-
+  }
+  const filterConsents = (index) => {
+    var consentItems = consentRequest.consentItems;
+    consentItems.splice(index, 1);
+    setConsentRequest ((prevState) => ({
+      ...prevState,
+      consentItems: consentItems
+    }
+    ))
   }
   return (
     <div className="flex flex-col">
@@ -345,7 +370,7 @@ function RequestConsent() {
             </thead>
             <tbody>
               {
-                consentRequest.consentItems.map((element) => {
+                consentRequest.consentItems.map((element, index) => {
                   return (
                         <tr>
                           <td>{AESUtils.decrypt(element.patientID)}</td>
@@ -353,6 +378,7 @@ function RequestConsent() {
                           <td>{new Date(element.fromDate).toDateString()}</td>
                           <td>{new Date(element.toDate).toDateString()}</td>
                           <td>{element.delegationRequired ? "Yes" : "No"}</td>
+                          <td className="text-center"><img src="/close_btn.png" width="21px" className="cursor-pointer" onClick={() => filterConsents(index)}/></td>
                         </tr>
                   )
                 })
