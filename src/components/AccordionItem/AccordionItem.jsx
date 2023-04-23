@@ -62,11 +62,8 @@ function AccordionItem({
           ongoing: items[i].ongoing,
           isDelegated: items[i].isDelegated
         }),
-      })
-        .then((data) => data.json())
-        .then((response) => {
-          setConsentArtifacts(response);
-        });
+      });
+        
     }
 
     fetch("http://localhost:9100/patient/updateConsentStatus", {
@@ -109,6 +106,7 @@ function AccordionItem({
       method: 'POST'
     }).then((response) => response.json())
     .then((data) => {
+      console.log(data)
       setConsentArtifacts(data);
       setItemShow(false)
       toaster.push(revokeItemMessage, { placement: 'topEnd' })
