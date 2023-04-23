@@ -4,7 +4,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { Checkbox, DateRangePicker, Dropdown, Form, Notification, useToaster, Placeholder } from 'rsuite';
 import { constants } from "../../constants";
-import { Button, Table } from "react-bootstrap";
+import { Button, Modal, Table } from "react-bootstrap";
 import isAfter from 'date-fns/isAfter';
 import AESUtils from "../../encryption/AESUtils";
 
@@ -32,7 +32,20 @@ function RequestConsent() {
       </div>
     </Notification>
   )
-
+  const verifyMessage = (
+    <Notification type="error" header="Verification Failed" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Verification Failed (OTP Failed)
+      </div>
+    </Notification>
+  )
+  const sentMessage = (
+    <Notification type="success" header="OTP Sent" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        OTP Sent
+      </div>
+    </Notification>
+  )
   const [consentResponse, setConsentResponse] = useState(null);
   const [isDelegated, setIsDelegated] = useState(false);
   const [selectedRecordType, setSelectedRecordType] = useState("");
@@ -48,7 +61,104 @@ function RequestConsent() {
       key: "selection",
     },
   ]);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [mobileError, setMobileError] = useState(false);
+  const [otpError, setOtpError] = useState(false);
+  const [show, setShow] = useState(false);
+  const [otp, setOtp] = useState("");
+  const sendOTP = () => {
+    if (mobileNumber.length === 0) {
+      setMobileError(true);
+      return;
+    } else {
+      setMobileError(false);
+    }
 
+    fetch("http://localhost:9100/otp/send", {
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        mobileNumber: "+91" + mobileNumber
+      }),
+      method: "POST"
+    }).then((response) => response.text())
+    .then((data) => {
+      if (data === "pending") {
+        setShow(true);
+        toaster.push(sentMessage, { placement: 'topEnd' })
+      }
+    })
+  }
+  const verifyOTP = () => {
+    if (otp.length === 0) {
+      setOtpError(true);
+      return;
+    } else {
+      setOtpError(false);
+    }
+    fetch("http://localhost:9100/otp/verify", {
+      headers: {
+        'Content-Type' : 'application/json',
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        otp: otp,
+        mobileNumber: "+91" + mobileNumber
+      }),
+      method: "POST"
+    }).then((response) => response.text())
+    .then((data) => {
+        if (data === 'approved') {
+          setShow(false);
+          var consentItems = consentRequest.consentItems;
+          for (var i = 0; i < consentItems.length; i++) {
+              consentItems[i].consentAcknowledged = true;
+              consentItems[i].approved = true;
+              consentItems[i].ongoing = true;
+              consentItems[i].isDelegated = consentItems[i].delegationRequired;
+
+          }
+          const req = {
+            ...consentRequest,
+            consentItems: consentItems,
+            patientID: AESUtils.encrypt(ABHA),
+            emergency: true,
+            doctorID: AESUtils.encrypt(UPRNID),
+            consentAcknowledged: true,
+            approved: true,
+            ongoing: true
+          };
+          fetch("http://localhost:9100/doctor/store-consent-request", {
+            body: JSON.stringify(req),
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization' : 'Bearer ' + localStorage.getItem("token")
+            },
+          })
+          .then((data) => data.text())
+          .then((response) => {
+            if (response !== null) {
+              toaster.push(sendMessage, { placement: 'topEnd' })
+              setConsentResponse(response);
+            } else setConsentResponse(null);
+
+          })
+          setConsentRequest({
+            doctorID: AESUtils.encrypt(UPRNID),
+            timestamp: new Date(Date.now()).toISOString(),
+            emergency: false,
+            ongoing: true,
+            consentItems: []
+          });
+        } else {
+          setShow(false);
+          toaster.push(verifyMessage, { placement: 'topEnd' })
+        }
+    })
+  }
   const createConsentItem = () => {
     const fromDate = new Date(dateSelection[0]);
     const toDate = new Date(dateSelection[1]);
@@ -338,10 +448,15 @@ function RequestConsent() {
               <Form.ErrorMessage show={startDateError || endDateError}>Date Range has to be selected</Form.ErrorMessage>
               <Form.HelpText>Date Range has to be chosen</Form.HelpText>
             </Form.Group>
+            <Form.Group >
+              <Form.ControlLabel className="font-semibold text-black">Mobile Phone Number(Incase of OTP)</Form.ControlLabel>
+              <Form.Control type="text" onChange={(e) => setMobileNumber(e)} errorMessage={mobileError ? "Mobile Number not available" : null} />
+              <Form.HelpText>Mobile Phone number(Optional)</Form.HelpText>
+            </Form.Group>
             <Form.Group className="mt-[5%] flex justify-between">
               <Button variant="primary" onClick={() => addConsentItemToConsentArtifact()}>Add Request</Button>
               <Button variant="success" onClick={() => sendRequest()}>Send Request</Button>
-              <Button variant="dark">Send OTP</Button>
+              <Button variant="dark" onClick={() => sendOTP()}>Send OTP</Button>
             </Form.Group>
             <Form.Group>
             {/* <button className='sidebar-emergency-button bg-red-800 flex p-4 m-2 gap-3 items-center justify-center text-white'>
@@ -387,6 +502,22 @@ function RequestConsent() {
         </Table>
           </>
         }
+        <Modal show={show}>
+          <Modal.Header className="text-black text-[16px]" closeButton onClick={() => setShow(false)}>Verify OTP</Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
+                <Form.ControlLabel className="font-semibold text-black">OTP</Form.ControlLabel>
+                <Form.Control type="text" onChange={(e) => setOtp(e)} errorMessage={otpError ? "Apply OTP" : null} />
+                <Form.HelpText>Enter OTP</Form.HelpText>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={() => setShow(false)}>Cancel</Button>
+            <Button variant="success" onClick={() => verifyOTP()}>Send</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );
