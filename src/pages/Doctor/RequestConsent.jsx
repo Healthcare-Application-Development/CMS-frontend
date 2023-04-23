@@ -46,6 +46,13 @@ function RequestConsent() {
       </div>
     </Notification>
   )
+  const addItemsError = (
+    <Notification type="error" header="Add Items" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Cannot make request without items
+      </div>
+    </Notification>
+  )
   const [consentResponse, setConsentResponse] = useState(null);
   const [isDelegated, setIsDelegated] = useState(false);
   const [selectedRecordType, setSelectedRecordType] = useState("");
@@ -66,8 +73,13 @@ function RequestConsent() {
   const [otpError, setOtpError] = useState(false);
   const [show, setShow] = useState(false);
   const [otp, setOtp] = useState("");
+  const [otpVerifyError, setOtpVerifyError] = useState(false);
   const sendOTP = () => {
-    if (mobileNumber.length === 0) {
+    if (consentRequest.consentItems.length == 0) {
+      toaster.push(addItemsError, { placement: 'topEnd' })
+      return;
+    }
+    if (mobileNumber.length == 0) {
       setMobileError(true);
       return;
     } else {
@@ -111,6 +123,7 @@ function RequestConsent() {
     }).then((response) => response.text())
     .then((data) => {
         if (data === 'approved') {
+          setOtpVerifyError(false);
           setShow(false);
           var consentItems = consentRequest.consentItems;
           for (var i = 0; i < consentItems.length; i++) {
@@ -154,7 +167,7 @@ function RequestConsent() {
             consentItems: []
           });
         } else {
-          setShow(false);
+          setOtpVerifyError(true);
           toaster.push(verifyMessage, { placement: 'topEnd' })
         }
     })
@@ -238,6 +251,7 @@ function RequestConsent() {
   )
   const sendRequest = () => {
     if (consentRequest.consentItems.length == 0) {
+      toaster.push(addItemsError, { placement: 'topEnd' })
       return;
     }
     setConsentRequest((prevState) => ({
@@ -272,6 +286,7 @@ function RequestConsent() {
   };
   const emergencyConsent = () => {
     if (consentRequest.consentItems.length == 0) {
+      toaster.push(addItemsError, { placement: 'topEnd' })
       return;
     }
     var consentItems = consentRequest.consentItems;
@@ -510,6 +525,7 @@ function RequestConsent() {
                 <Form.ControlLabel className="font-semibold text-black">OTP</Form.ControlLabel>
                 <Form.Control type="text" onChange={(e) => setOtp(e)} errorMessage={otpError ? "Apply OTP" : null} />
                 <Form.HelpText>Enter OTP</Form.HelpText>
+                {otpVerifyError && <p className="text-[red] mt-[1%]">OTP Verification Failed</p>}
               </Form.Group>
             </Form>
           </Modal.Body>
