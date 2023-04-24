@@ -27,9 +27,10 @@ function Home() {
       if (data.status === 200) {
         setFailedLogin(false);
         localStorage.setItem("token", data.object.accessToken);
-        localStorage.setItem("user", JSON.stringify(data.object))
+        localStorage.setItem("user", JSON.stringify(data.object));
+        console.log(data.object);
         if (selectedOption === 'guardian') {
-          navigate('/guardian/redirect_to_patient')
+          navigate('/patient/PatientPendingCR')
         }
         if (selectedOption === 'doctor') {
           navigate('/doctor/requestConsent')

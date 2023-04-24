@@ -16,7 +16,7 @@ function AssignGuardian() {
   ]);
 
   const getConsentArtifacts = () => {
-    fetch("http://localhost:9100/patient/getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
+    fetch("http://localhost:9100//getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
       headers: {
         "Content-Type": "application/json",
         'Authorization' : 'Bearer ' + localStorage.getItem("token")

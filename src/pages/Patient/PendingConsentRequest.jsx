@@ -6,15 +6,20 @@ import AESUtils from "../../encryption/AESUtils";
 
 function PendingConsentRequest() {
   var ABHAID = ""
+  var guard_id=""
   const user = localStorage.getItem("user");
   if (user) {
-    ABHAID = JSON.parse(user).id
+    ABHAID = JSON.parse(user).id;
+    guard_id = JSON.parse(user).guardianID;
   }
   const [consentArtifacts, setConsentArtifacts] = useState([
     { consentHeading: "No requests" },
   ]);
 
   const getConsentArtifacts = () => {
+    if(guard_id !== null){
+      ABHAID = guard_id;
+    }
     fetch("http://localhost:9100/patient/getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
       headers: {
         "Content-Type": "application/json",

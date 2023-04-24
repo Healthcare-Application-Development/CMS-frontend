@@ -5,6 +5,7 @@ import AESUtils from '../../encryption/AESUtils';
 
 function GetPatientRecord() {
   var ABHAID = ""
+  var guard_id = ""
   const user = localStorage.getItem("user");
   if (user) {
     ABHAID = JSON.parse(user).id
