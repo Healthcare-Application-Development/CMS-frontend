@@ -13,6 +13,7 @@ export const constants = {
   REACT_APP_SIDEBAR_PATIENT_ONGOING_CONSENT: "Patient Ongoing Consent",
   REACT_APP_SIDEBAR_PAST_CONSENT_REQUEST: "Past Consent Request",
   REACT_APP_SIDEBAR_GET_MY_RECORDS: "Get My Records",
+  REACT_APP_SIDEBAR_ASSIGN_GUARDIAN: "Assign/ View Guardians",
 
   REACT_APP_REGISTRATION_HEADING: "Registration",
   REACT_APP_NAME_LABEL: "Name",
@@ -45,7 +46,10 @@ export const constants = {
   REACT_APP_ADMIN_EMAIL_LABEL: "Administrator Email",
   REACT_APP_ADMIN_PHONE_LABEL: "Administrator Phone",
   REACT_APP_CREATE_HOSPITAL_LABEL: "Add Hospital",
-
+  REACT_APP_GUARDIAN_NAME_LABEL: "Guardian Name",
+  REACT_APP_GUARDIAN_ID_LABEL: "Guardian ID",
+  REACT_APP_CREATE_GUARDIAN_LABEL: "Add Guardian",
+  
   hospitalList: {
     0: "Select Hospital",
     1: "vivek",

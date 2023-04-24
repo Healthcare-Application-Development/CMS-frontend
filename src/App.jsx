@@ -23,6 +23,7 @@ function App() {
         <Route path="/patient/PatientOngoingCR" element={<PatientOngoingCR/>} />
         <Route path="/patient/PatientPastCR" element={<PatientPastCR/>} />
         <Route path="/patient/PatientPendingCR" element={<PatientPendingCR/>} />
+        
       </Routes>
     </div>
   );
