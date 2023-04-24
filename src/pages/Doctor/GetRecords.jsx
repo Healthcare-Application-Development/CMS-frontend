@@ -17,7 +17,8 @@ function GetRecords() {
                 artifactId: location.state.artifactId,
                 emergency : false,
                 doctorID: AESUtils.encrypt(location.state.doctorId),
-                delegationID: location.state.delegationID
+                delegationID: location.state.delegationID,
+                consentID: location.state.consentID
             })
         }).then((response) => response.json())
         .then((data) => {
