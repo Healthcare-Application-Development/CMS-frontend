@@ -40,14 +40,15 @@ function SharedConsent() {
         fetchConsentsSharedByDoc();
         fetchConsentsSharedToDoc();
     }, []);
-    const viewPatientHealthRecord = (consentMessage, patientID, artifactID, delegationID) => {
+    const viewPatientHealthRecord = (consentMessage, patientID, artifactID, delegationID, consentItemID) => {
         navigate("/doctor/getRecords", {
             state: {
                 patientID: patientID,
                 consentMessage: consentMessage,
                 artifactId: artifactID,
                 doctorId: UPRNID,
-                delegationID: delegationID
+                delegationID: delegationID,
+                consentID: consentItemID
             }
         })
     }
@@ -91,8 +92,8 @@ function SharedConsent() {
                                     <p>Record Type: {AESUtils.decrypt(element.recordType)}</p>
                                     <p>Consent Duration: {new Date(element.fromDate).toDateString()} {"-"} {new Date(element.toDate).toDateString()}</p>
                                 </div>
-                                <Button disabled={!element.isDelegated} variant='danger' className='w-[20%] mt-[1%]' onClick={() => openModal(element.id)}>Revoke</Button>
-                                {!element.isDelegated && <p className='mt-[2%] text-black'>
+                                <Button disabled={!element.isDelegated || element.consentItemID.revoked} variant='danger' className='w-[20%] mt-[1%]' onClick={() => openModal(element.id)}>Revoke</Button>
+                                {(!element.isDelegated || element.consentItemID.revoked)&& <p className='mt-[2%] text-black'>
                                     <img src="/rotate.png" width="16px" className='inline mr-[1%] text-[red]'></img>
                                     Consent Revoked
                                 </p>}
@@ -114,8 +115,8 @@ function SharedConsent() {
                                     <p>Record Type: {AESUtils.decrypt(element.recordType)}</p>
                                     <p>Consent Duration: {new Date(element.fromDate).toDateString()} {"-"} {new Date(element.toDate).toDateString()}</p>
                                 </div>
-                                <Button disabled={!element.isDelegated} variant='success' className='w-[20%] mt-[1%]' onClick={() => viewPatientHealthRecord(element.recordType, element.patientID, element.consentItemID.artifactID, element.id)}>View Health Record</Button>
-                                {!element.isDelegated && <p className='mt-[2%] text-black'>
+                                <Button disabled={!element.isDelegated || element.consentItemID.revoked} variant='success' className='w-[20%] mt-[1%]' onClick={() => viewPatientHealthRecord(element.recordType, element.patientID, element.consentItemID.artifactID, element.id, element.consentItemID.id)}>View Health Record</Button>
+                                {(!element.isDelegated || element.consentItemID.revoked) && <p className='mt-[2%] text-black'>
                                     <img src="/rotate.png" width="16px" className='inline mr-[1%] text-[red]'></img>
                                     Consent Revoked
                                 </p>}
