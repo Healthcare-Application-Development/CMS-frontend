@@ -17,6 +17,7 @@ function AccordionItem({
   patientId,
   revoked
 }) {
+  console.log(patientId);
   const toaster = useToaster();
   const revokeItemMessage = (
     <Notification type="error" header="Revoked" closable>

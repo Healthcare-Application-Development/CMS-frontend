@@ -4,6 +4,8 @@ import { AccordionItem, SidebarPatient } from "../../components";
 import { useState, useEffect } from "react";
 import AESUtils from "../../encryption/AESUtils";
 
+
+
 function PendingConsentRequest() {
   var ABHAID = ""
   var guard_id=""
@@ -19,6 +21,7 @@ function PendingConsentRequest() {
   const getConsentArtifacts = () => {
     if(guard_id !== null){
       ABHAID = guard_id;
+      localStorage.setItem("ABHAID", ABHAID);
     }
     fetch("http://localhost:9100/patient/getAllConsents?id=" + encodeURIComponent(AESUtils.encrypt(ABHAID)), {
       headers: {
@@ -65,7 +68,7 @@ function PendingConsentRequest() {
               items={element.consentItems}
               approved={element.approved} 
               consentAcknowledged={element.consentAcknowledged}
-              patientId={ABHAID}
+              patientId={localStorage.getItem("ABHAID")}
               isDelegated={element.isDelegated}
               revoked={element.revoked}
             />;
