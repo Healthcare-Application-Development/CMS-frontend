@@ -2,7 +2,7 @@ import React, { useEffect,useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { Sidebar } from "../../components";
 import { useNavigate } from "react-router-dom";
-import { Form } from "rsuite";
+import { Form, toaster } from "rsuite";
 import AESUtils from "../../encryption/AESUtils";
 
 function getAllConsent() {
@@ -31,6 +31,13 @@ function getAllConsent() {
   useEffect(() => {
     getAllConsents();
   }, []);
+  const successDelegate = (
+    <Notification type="success" header="Delegation Successful" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Successfully delegated consent
+      </div>
+    </Notification>
+  )
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateError, setDateError] = useState(false);
@@ -104,6 +111,7 @@ function getAllConsent() {
         })
           .then((data) => data.json())
           .then((response) => {
+            toaster.push(successDelegate, { placement: 'topEnd' })
             setDoctorConsentList(response.object);
           });
   }
