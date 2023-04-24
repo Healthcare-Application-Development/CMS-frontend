@@ -2,7 +2,7 @@ import React, { useEffect,useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { Sidebar } from "../../components";
 import { useNavigate } from "react-router-dom";
-import { Form, toaster } from "rsuite";
+import { Form, Notification, toaster } from "rsuite";
 import AESUtils from "../../encryption/AESUtils";
 
 function getAllConsent() {
