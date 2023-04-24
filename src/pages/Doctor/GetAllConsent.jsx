@@ -176,7 +176,8 @@ function getAllConsent() {
                             patientID: element.patientID,
                             consentMessage: element.consentMessage,
                             artifactId: element.artifactID,
-                            doctorId: UPRNID
+                            doctorId: UPRNID,
+                            consentID: element.id
                           }
                         })}>Get Record</Button>
                       </td>
