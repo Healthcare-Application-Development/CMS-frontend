@@ -92,7 +92,7 @@ function RequestConsent() {
         'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
       body: JSON.stringify({
-        mobileNumber: "+91" + mobileNumber
+        mobileNumber: AESUtils.encrypt("+91" + mobileNumber)
       }),
       method: "POST"
     }).then((response) => response.text())
@@ -116,8 +116,8 @@ function RequestConsent() {
         'Authorization' : 'Bearer ' + localStorage.getItem("token")
       },
       body: JSON.stringify({
-        otp: otp,
-        mobileNumber: "+91" + mobileNumber
+        otp: AESUtils.encrypt(otp),
+        mobileNumber: AESUtils.encrypt("+91" + mobileNumber)
       }),
       method: "POST"
     }).then((response) => response.text())
