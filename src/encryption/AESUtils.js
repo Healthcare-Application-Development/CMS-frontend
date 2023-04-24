@@ -1,7 +1,6 @@
 import CryptoJS from 'crypto-js';
 
 var secretkey = import.meta.env.VITE_SECRET_KEY;
-console.log(secretkey);
 var key = CryptoJS.enc.Utf8.parse(secretkey);
 var iv = CryptoJS.enc.Utf8.parse(secretkey.substring(0, 16));
 

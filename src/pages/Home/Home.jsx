@@ -28,7 +28,7 @@ function Home() {
         setFailedLogin(false);
         localStorage.setItem("token", data.object.accessToken);
         localStorage.setItem("user", JSON.stringify(data.object));
-        console.log(data.object);
+        
         if (selectedOption === 'guardian') {
           navigate('/patient/PatientPendingCR')
         }
