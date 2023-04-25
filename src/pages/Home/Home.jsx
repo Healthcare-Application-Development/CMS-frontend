@@ -29,10 +29,13 @@ function Home() {
         localStorage.setItem("token", data.object.accessToken);
         localStorage.setItem("user", JSON.stringify(data.object));
         
-        if (selectedOption === 'guardian') {
+        if (selectedOption === 'superadmin') {
+          navigate('/superadmin')
+        }
+        else if (selectedOption === 'guardian') {
           navigate('/patient/PatientPendingCR')
         }
-        if (selectedOption === 'doctor') {
+        else if (selectedOption === 'doctor') {
           navigate('/doctor/requestConsent')
         } else {
           navigate('/patient/PatientPendingCR')
@@ -54,6 +57,7 @@ function Home() {
                   <Form.Check type='radio' label="Doctor" name='login' onClick={() => setSelectedOption('doctor') }/>
                   <Form.Check type='radio' label="Patient" name='login' onClick={() => setSelectedOption('patient')}/>
                   <Form.Check type='radio' label="Guardian" name='login' onClick={() => setSelectedOption('guardian')}/>
+                  <Form.Check type='radio' label="Super Admin" name='login' onClick={() => setSelectedOption('superadmin')}/>
                 </Form.Group>
                 <Form.Group className="mb-2 form-group-style" >
                     <Textbox label = "Username" type="text" onChange={(e) => setUsername(e.target.value)}/>
