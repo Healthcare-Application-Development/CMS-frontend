@@ -137,7 +137,7 @@ function RequestConsent() {
             ...consentRequest,
             consentItems: consentItems,
             patientID: AESUtils.encrypt(ABHA),
-            emergency: true,
+            emergency: false,
             doctorID: AESUtils.encrypt(UPRNID),
             consentAcknowledged: true,
             approved: true,
