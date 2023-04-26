@@ -9,9 +9,13 @@ function GetPatientRecord() {
   const user = localStorage.getItem("user");
   if (user) {
     ABHAID = JSON.parse(user).id
+    guard_id = JSON.parse(user).guardianID;
   }
   const [healthRecords, setHealthRecords] = useState([]);
   useEffect(() => {
+    if(guard_id !== null){
+      ABHAID = guard_id;
+    }
     fetch("http://localhost:9100/patient/getHealthRecords", {
       headers: {
         "Content-Type" : "application/json",
@@ -36,7 +40,7 @@ function GetPatientRecord() {
           <p className="font-poppins font-semibold font-regular text-2xl leading-26 tracking-tighter text-black">
             My Records
           </p>
-          { healthRecords && healthRecords.length > 0 && healthRecords.map((element) => {
+          { healthRecords && healthRecords.length > 0 && Array.isArray(healthRecords) && healthRecords.map((element) => {
               return (
                   <div className='card w-[70%] p-3 mt-[2%]'>
                       <p className='text-[18px] text-black'>Patient ID: {AESUtils.decrypt(element.abhaId)}</p>

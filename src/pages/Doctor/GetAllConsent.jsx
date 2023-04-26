@@ -165,6 +165,7 @@ function getAllConsent() {
             <tbody>
               {doctorConsentList &&
                 doctorConsentList.length > 0 &&
+                Array.isArray(doctorConsentList) &&
                 doctorConsentList.map((element) => {
                   return (
                     <tr>

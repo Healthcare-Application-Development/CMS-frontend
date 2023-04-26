@@ -500,7 +500,7 @@ function RequestConsent() {
             </thead>
             <tbody>
               {
-                consentRequest.consentItems.map((element, index) => {
+                consentRequest.consentItems && consentRequest.consentItems.length > 0 && Array.isArray(consentRequest.consentItems) && consentRequest.consentItems.map((element, index) => {
                   return (
                         <tr>
                           <td>{AESUtils.decrypt(element.patientID)}</td>
