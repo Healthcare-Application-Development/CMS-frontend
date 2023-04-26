@@ -106,7 +106,6 @@ function AccordionItem({
       method: 'POST'
     }).then((response) => response.json())
     .then((data) => {
-      console.log(data)
       setConsentArtifacts(data);
       setItemShow(false)
       toaster.push(revokeItemMessage, { placement: 'topEnd' })
@@ -146,7 +145,7 @@ function AccordionItem({
           <p className="mb-[1%]">Emergency : {emergency ? "Yes" : "No"}</p>
         </div>
         {/* <ul style={}> */}
-          {consentItems && consentItems.length > 0 && consentItems.map((consent) => (
+          {consentItems && consentItems.length > 0 && Array.isArray(consentItems) && consentItems.map((consent) => (
             <div key={consent.id} className="bg-[#444444] p-3 rounded-[20px] text-white opacity-70 mt-1 mb-1 font-bold">
                 <input type="checkbox" className="inline" value={consent.id} onClick={(e) => updateItems(e, consent.id)} disabled={consent.consentAcknowledged} checked={!consent.consentAcknowledged ? null : consent.approved}/>
                 <span className="ml-[1.5%]">{AESUtils.decrypt(consent.consentMessage)}</span>

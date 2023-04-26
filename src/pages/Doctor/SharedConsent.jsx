@@ -83,7 +83,7 @@ function SharedConsent() {
                     Consents shared by you
                 </div>
                 {
-                    consentsSharedByDoc && consentsSharedByDoc.length > 0 && consentsSharedByDoc.map((element) => {
+                    consentsSharedByDoc && consentsSharedByDoc.length > 0 && Array.isArray(consentsSharedByDoc) && consentsSharedByDoc.map((element) => {
                         return (
                             <div className='card w-[70%] p-3 mt-[2%] ml-[16%]'>
                                 <p className='text-black text-[18px]'>Shared Consent</p>
@@ -106,7 +106,7 @@ function SharedConsent() {
                     Consents shared to you
                 </div>
                 {
-                    consentsSharedToDoc && consentsSharedToDoc.length > 0 && consentsSharedToDoc.map((element) => {
+                    consentsSharedToDoc && consentsSharedToDoc.length > 0 && Array.isArray(consentsSharedToDoc) && consentsSharedToDoc.map((element) => {
                         return (
                             <div className='card w-[70%] p-3 mt-[2%] ml-[16%]'>
                                 <p className='text-black text-[18px]'>Shared Consent</p>

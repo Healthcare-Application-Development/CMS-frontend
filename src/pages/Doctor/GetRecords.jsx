@@ -33,7 +33,7 @@ function GetRecords() {
             <Sidebar />
             <div className="w-[70%] h-[100%] ml-[20%] mt-[7%]">
                 <p className="text-[28px] mb-[2%] text-black font-semibold text-center">View Records</p>
-                { healthRecords && healthRecords.length > 0 && healthRecords.map((element) => {
+                { healthRecords && healthRecords.length > 0 && Array.isArray(healthRecords) && healthRecords.map((element) => {
                     return (
                         <div className='card w-[70%] p-3 mt-[2%] ml-[16%]'>
                             <p className='text-[18px] text-black'>Patient ID: {AESUtils.decrypt(element.abhaId)}</p>
