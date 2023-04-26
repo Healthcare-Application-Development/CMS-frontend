@@ -3,6 +3,8 @@ import { Home, Doctor, Patient, CreateHospital,GetAllConsent, ReqestConsent, Get
 import { GetPatientRecord, PatientOngoingCR, PatientPastCR, PatientPendingCR, SuperAdmin} from "./pages";
 import { constants } from "./constants";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { ProtectedRoute } from "./utils/ ProtectedRoute";
+
 
 function App() {
   return (
@@ -14,7 +16,7 @@ function App() {
         {/* <Route path="/super_admin" element={<CreateHospital />} /> */}
 
         <Route path="/doctor" element={<Doctor />} />
-        <Route path="/doctor/requestConsent" element={<ReqestConsent />} />
+        <Route path="/doctor/requestConsent" element={<ProtectedRoute><ReqestConsent /></ProtectedRoute>} />
         <Route path="/doctor/getAllConsents" element={<GetAllConsent />} />
         <Route path="/doctor/getRecords" element={<GetRecords />} />
         <Route path="/doctor/sharedConsents" element={<SharedConsent />} />
