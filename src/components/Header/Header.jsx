@@ -10,6 +10,7 @@ function Header() {
   const onLogout = () => {
     localStorage.removeItem("user")
     localStorage.removeItem("ABHAID")
+    localStorage.removeItem("token")
     navigate("/")
   }
     return (
