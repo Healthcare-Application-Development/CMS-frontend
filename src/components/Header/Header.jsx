@@ -9,6 +9,7 @@ function Header() {
   const user = localStorage.getItem("user");
   const onLogout = () => {
     localStorage.removeItem("user")
+    localStorage.removeItem("ABHAID")
     navigate("/")
   }
     return (
