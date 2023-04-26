@@ -67,7 +67,7 @@ function PendingConsentRequest() {
               items={element.consentItems}
               approved={element.approved} 
               consentAcknowledged={element.consentAcknowledged}
-              patientId={localStorage.getItem("ABHAID")}
+              patientId={localStorage.getItem("ABHAID") === null ? ABHAID : localStorage.getItem("ABHAID")}
               isDelegated={element.isDelegated}
               revoked={element.revoked}
             />;

@@ -25,10 +25,24 @@ function AccordionItem({
       </div>
     </Notification>
   );
+  const revokeItemMessageError = (
+    <Notification type="error" header="Revoked" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Item not Revoked
+      </div>
+    </Notification>
+  );
   const revokeConsentMessage = (
     <Notification type="error" header="Revoked" closable>
       <div className='w-[320px] font-semibold' style={{width: '320px'}}>
         Consent Revoked
+      </div>
+    </Notification>
+  );
+  const revokeConsentMessageError = (
+    <Notification type="error" header="Revoked" closable>
+      <div className='w-[320px] font-semibold' style={{width: '320px'}}>
+        Consent not Revoked
       </div>
     </Notification>
   );
@@ -106,9 +120,14 @@ function AccordionItem({
       method: 'POST'
     }).then((response) => response.json())
     .then((data) => {
-      setConsentArtifacts(data);
-      setItemShow(false)
-      toaster.push(revokeItemMessage, { placement: 'topEnd' })
+      if (data.status === 200) {
+        setConsentArtifacts(data);
+        setItemShow(false)
+        toaster.push(revokeItemMessage, { placement: 'topEnd' })
+      } else {
+        setItemShow(false)
+        toaster.push(revokeItemMessageError, { placement: 'topEnd' })
+      }
     })
   }
   const revokeConsent = (artifactId) => {
@@ -123,9 +142,14 @@ function AccordionItem({
       method: 'POST'
     }).then((response) => response.json())
     .then((data) => {
-      setConsentArtifacts(data);
-      setShow(false)
-      toaster.push(revokeConsentMessage, { placement: 'topEnd' })
+      if (data.status  === 200) {
+        setConsentArtifacts(data);
+        setShow(false)
+        toaster.push(revokeConsentMessage, { placement: 'topEnd' })
+      } else {
+        setShow(false)
+        toaster.push(revokeConsentMessageError, { placement: 'topEnd' })
+      }
     })
   }
   const [show, setShow] = useState(false);
